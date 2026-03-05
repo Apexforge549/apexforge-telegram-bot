@@ -31,14 +31,6 @@ else:
 # Conversation state
 USERNAME = 1
 
-# Main keyboard after registration
-main_keyboard = ReplyKeyboardMarkup(
-    [
-        ["🎮 Join Tournament"],
-        ["💰 Wallet", "👤 Profile"]
-    ],
-    resize_keyboard=True
-)
 
 # Start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -65,7 +57,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return USERNAME
 
 
-# Username handler
+# Username handler for registration 
 async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     username = update.message.text.strip()
@@ -120,6 +112,16 @@ def main():
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)
+
+
+# Main keyboard after registration
+main_keyboard = ReplyKeyboardMarkup(
+    [
+        ["🎮 Join Tournament"],
+        ["💰 Wallet", "👤 Profile"]
+    ],
+    resize_keyboard=True
+)
 
 
 if __name__ == "__main__":

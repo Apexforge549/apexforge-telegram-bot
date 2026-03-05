@@ -5,8 +5,7 @@ import re
 from datetime import datetime
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, ConversationHandler
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
+from pymongo import MongoClient
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 MONGO_URI = os.getenv("MONGO_URI")
@@ -14,14 +13,12 @@ MONGO_URI = os.getenv("MONGO_URI")
 print("TOKEN:", BOT_TOKEN)
 
 # MongoDB connection
-client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
-
-# Send a ping to confirm a successful connection
 try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    client.server_info()  # Test connection
+    print("MongoDB connected successfully")
 except Exception as e:
-    print(e)
+    print("MongoDB connection error:", e)
 
 db = client["esports_db"]
 users_collection = db["users"]

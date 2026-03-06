@@ -28,6 +28,36 @@ if client:
 else:
     users_collection = None
 
+#Bot connection
+def main():
+
+    if not BOT_TOKEN:
+        raise ValueError("BOT_TOKEN is missing!")
+
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler("start", start)],
+        states={
+            USERNAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, set_username)]
+        },
+        fallbacks=[]
+    )
+
+    app.add_handler(conv_handler)
+
+    print("Bot is running...")
+    app.run_polling(drop_pending_updates=True)
+
+if __name__ == "__main__":
+    main()
+
+
+#Till here the connection logic is written
+#From here the main logic starts
+#-------------------------------------------------------
+
+
 # Conversation state
 USERNAME = 1
 
@@ -90,28 +120,12 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=main_keyboard
     )
 
-    return ConversationHandler.END
+    return ConversationHandler.END   #used for ending the conversation for start command
 
 
-def main():
+#The start command logic ends here
+#-------------------------------------------------------
 
-    if not BOT_TOKEN:
-        raise ValueError("BOT_TOKEN is missing!")
-
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler("start", start)],
-        states={
-            USERNAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, set_username)]
-        },
-        fallbacks=[]
-    )
-
-    app.add_handler(conv_handler)
-
-    print("Bot is running...")
-    app.run_polling(drop_pending_updates=True)
 
 
 # Main keyboard after registration
@@ -122,7 +136,3 @@ main_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
-
-
-if __name__ == "__main__":
-    main()

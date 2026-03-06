@@ -105,8 +105,10 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Main keyboard after registration
 main_keyboard = ReplyKeyboardMarkup(
     [
-        ["🎮 Join Tournament"],
-        ["💰 Wallet", "👤 Profile"]
+        ["🏆 Tournaments"],
+        ["💳 Deposit", "💸 Withdraw"],
+        ["💰 Balance", "📅 Check-in"],
+        ["👤 Profile", "ℹ️ About"]
     ],
     resize_keyboard=True
 )

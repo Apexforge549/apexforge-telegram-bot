@@ -102,6 +102,16 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #The start command logic ends here
 #-------------------------------------------------------
 
+# Main keyboard after registration
+main_keyboard = ReplyKeyboardMarkup(
+    [
+        ["🎮 Join Tournament"],
+        ["💰 Wallet", "👤 Profile"]
+    ],
+    resize_keyboard=True
+)
+
+
 #Bot connection
 def main():
 
@@ -126,11 +136,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Main keyboard after registration
-main_keyboard = ReplyKeyboardMarkup(
-    [
-        ["🎮 Join Tournament"],
-        ["💰 Wallet", "👤 Profile"]
-    ],
-    resize_keyboard=True
-)

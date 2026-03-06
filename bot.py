@@ -106,13 +106,13 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
 main_keyboard = ReplyKeyboardMarkup(
     [
         ["🏆 Tournaments"],
-        ["💳 Deposit", "💸 Withdraw"],
-        ["💰 Balance", "📅 Check-in"],
-        ["👤 Profile", "ℹ️ About"]
+        ["📅 Check-in", "👤 Profile"],
+        ["💰 Balance", "ℹ️ About"],
+        ["💸 Withdraw", "💳 Deposit"]
     ],
     resize_keyboard=True
 )
-
+      
 
 #Bot connection
 def main():

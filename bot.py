@@ -6,6 +6,9 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 #importing start logic from start.py
 from handlers.start import start, set_username, USERNAME
 
+#importing profile logic from profile.py
+from handlers.profile import profile
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -25,6 +28,7 @@ def main():
     )
 
     app.add_handler(conv_handler)
+    app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

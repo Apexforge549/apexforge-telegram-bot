@@ -61,7 +61,9 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "uid": user_id,
         "username": username,
         "joined_on": datetime.utcnow(),
-        "balance": 0
+        "balance": 0,
+        "deposit_balance": 0,
+        "withdraw_balance": 0
     })
 
     await update.message.reply_text(

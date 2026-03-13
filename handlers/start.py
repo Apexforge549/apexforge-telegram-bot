@@ -60,7 +60,8 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
     users_collection.insert_one({
         "uid": user_id,
         "username": username,
-        "joined_on": datetime.utcnow()
+        "joined_on": datetime.utcnow(),
+        "balance": 0
     })
 
     await update.message.reply_text(

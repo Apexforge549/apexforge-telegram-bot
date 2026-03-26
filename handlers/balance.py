@@ -18,9 +18,9 @@ async def balance(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # Safely get fields (default = 0 if not present)
-    total_balance = user["balance"]
-    deposit_balance = user["deposit_balance"]
-    withdraw_balance = user[withdraw_balance"]
+    total_balance = user.get("balance", 0)
+    deposit_balance = user.get("deposit_balance", 0)
+    withdraw_balance = user.get("withdraw_balance", 0)
 
     message = (
         "💰 Your Wallet 💳\n\n"

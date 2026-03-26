@@ -12,6 +12,9 @@ from handlers.profile import profile
 #importing balance logic from balance.py
 from handlers.balance import balance
 
+#importing check in logic from check.py
+from handlers.check import checkin
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection

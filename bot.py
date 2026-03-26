@@ -31,7 +31,12 @@ def main():
     )
 
     app.add_handler(conv_handler)
+
+    #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
+
+    #handler for balance button
+    app.add_handler(MessageHandler(filters.Regex("^💰 Balance$"), balance))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

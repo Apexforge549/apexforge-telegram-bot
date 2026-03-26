@@ -20,13 +20,13 @@ async def balance(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Safely get fields (default = 0 if not present)
     total_balance = user.get("balance", 0)
     deposit_balance = user.get("deposit_balance", 0)
-    withdraw_balance = user.get("withdraw_balance", 0)
+    winning_balance = user.get("winning_balance", 0)
 
     message = (
         "💰 Your Wallet 💳\n\n"
         f"🤑 Total Balance: ₹{total_balance}\n"
         f"📥 Deposit Balance: ₹{deposit_balance}\n"
-        f"💸 Withdraw Balance: ₹{withdraw_balance}"
+        f"💸 Withdraw Balance: ₹{winning_balance}"
     )
 
     await update.message.reply_text(message)

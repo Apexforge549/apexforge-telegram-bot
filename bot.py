@@ -9,6 +9,9 @@ from handlers.start import start, set_username, USERNAME
 #importing profile logic from profile.py
 from handlers.profile import profile
 
+#importing balance logic from balance.py
+from handlers.balance import balance
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection

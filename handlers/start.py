@@ -61,6 +61,7 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "uid": user_id,
         "username": username,
         "joined_on": datetime.utcnow(),
+        "last_checkin": None,
         "balance": 0,
         "deposit_balance": 0,
         "winning_balance": 0

@@ -26,7 +26,7 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     last_checkin = user.get("last_checkin")
 
-    # Convert stored time to IST before comparing
+    # Check if already checked in today (IST)
     if last_checkin:
         last_checkin_ist = last_checkin.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
 
@@ -36,7 +36,7 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return
 
-    # Give ₹1 reward
+    # Update DB (₹1 reward)
     users_collection.update_one(
         {"uid": user_id},
         {
@@ -45,11 +45,24 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "balance": 1
             },
             "$set": {
-                "last_checkin": datetime.utcnow()  # store in UTC (best practice)
+                "last_checkin": datetime.utcnow()
             }
         }
     )
 
+    # Fetch updated balance
+    updated_user = users_collection.find_one({"uid": user_id})
+    updated_balance = updated_user.get("balance", 0)
+
+    # ✅ First message
     await update.message.reply_text(
-        "✅ Check-in successful!\n\n💰 ₹1 has been added to your deposit balance."
+        "✅ You have successfully checked in! 🎉\n\n"
+        "💰 Your balance has been increased by +₹1. 📈\n\n"
+        "🔄 Come back tomorrow to check-in again! ⏳😊"
+    )
+
+    # ✅ Second message
+    await update.message.reply_text(
+        f"💵 Your updated balance is now: ₹{updated_balance} 🎊🚀\n\n"
+        "🔹 Keep checking in daily to earn more rewards! 🎁"
     )

@@ -4,9 +4,9 @@ from telegram import ReplyKeyboardMarkup
 main_keyboard = ReplyKeyboardMarkup(
     [
         ["🏆 Tournaments"],
-        ["📅 Check-in", "👤 Profile"],
-        ["💰 Balance", "ℹ️ About"],
-        ["💸 Withdraw", "💳 Deposit"]
+        ["✅ Check-in", "👤 Profile"],
+        ["📊 Balance", "ℹ️ About"],
+        ["📤 Withdraw", "💳 Deposit"]
     ],
     resize_keyboard=True
 )

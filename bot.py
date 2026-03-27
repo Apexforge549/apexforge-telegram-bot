@@ -39,10 +39,10 @@ def main():
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
 
     #handler for balance button
-    app.add_handler(MessageHandler(filters.Regex("^💰 Balance$"), balance))
+    app.add_handler(MessageHandler(filters.Regex("^📊 Balance$"), balance))
 
     #handler for check in button
-    app.add_handler(MessageHandler(filters.Regex("^📅 Check-in$"), checkin))
+    app.add_handler(MessageHandler(filters.Regex("^✅ Check-in$"), checkin))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

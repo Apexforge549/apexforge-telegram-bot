@@ -32,7 +32,7 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         if last_checkin_ist.date() == today:
             await update.message.reply_text(
-                "❌ You have checked in today.\nCome tomorrow. Have a nice day 😊"
+                "✅ You have already checked in today. Come back tomorrow!☺️"
             )
             return
 

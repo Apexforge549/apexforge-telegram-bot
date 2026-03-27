@@ -1,7 +1,11 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from database import users_collection
+
+# Indian timezone
+IST = ZoneInfo("Asia/Kolkata")
 
 
 async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,26 +15,28 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     user_id = update.effective_user.id
-
     user = users_collection.find_one({"uid": user_id})
 
     if not user:
         await update.message.reply_text("User not registered. Use /start first.")
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(IST)
+    today = now.date()
 
     last_checkin = user.get("last_checkin")
 
-    # Check if already checked in today
+    # Convert stored time to IST before comparing
     if last_checkin:
-        if last_checkin.date() == now.date():
+        last_checkin_ist = last_checkin.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
+
+        if last_checkin_ist.date() == today:
             await update.message.reply_text(
-                "You have checked in today. Come tomorrow. Have a nice day 😊"
+                "❌ You have checked in today.\nCome tomorrow. Have a nice day 😊"
             )
             return
 
-    # Give reward ₹1
+    # Give ₹1 reward
     users_collection.update_one(
         {"uid": user_id},
         {
@@ -39,11 +45,11 @@ async def checkin(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 "balance": 1
             },
             "$set": {
-                "last_checkin": now
+                "last_checkin": datetime.utcnow()  # store in UTC (best practice)
             }
         }
     )
 
     await update.message.reply_text(
-        "✅ Check-in successful!\n\n💰 ₹1 has been added to your wallet."
-  )
+        "✅ Check-in successful!\n\n💰 ₹1 has been added to your deposit balance."
+    )

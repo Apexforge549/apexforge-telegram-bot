@@ -10,3 +10,12 @@ main_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+# Deposit keyboard
+deposit_keyboard = ReplyKeyboardMarkup(
+    [
+        ["Enter Amount"],
+        ["📜 Deposit History"]
+    ],
+    resize_keyboard=True
+)

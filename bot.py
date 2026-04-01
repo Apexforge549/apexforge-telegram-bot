@@ -78,8 +78,9 @@ def main():
         UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
     },
     fallbacks=[]
-)
-app.add_handler(deposit_conv)
+    )
+
+    app.add_handler(deposit_conv)
 
 
     print("Bot is running...")

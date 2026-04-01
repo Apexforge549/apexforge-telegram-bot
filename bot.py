@@ -59,11 +59,23 @@ def main():
     )
 
     app.add_handler(conv_handler)
-    app.add_handler(deposit_conv)
+    
 
-    # ---------------- TEMPORARY HANDLER (DELETE LATER) ----------------
-    app.add_handler(MessageHandler(filters.PHOTO, get_file_id))
-    # ---------------- END TEMPORARY HANDLER ----------------
+    #handler for Enter amount button in deposit button
+    deposit_conv = ConversationHandler(
+    entry_points=[
+        MessageHandler(filters.Regex("^💰 Enter Amount$"), enter_amount)
+    ],
+    states={
+        AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_amount)],
+        WAIT_DONE: [CallbackQueryHandler(done_callback, pattern="^deposit_done$")],
+        UPI_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)],
+        UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
+    },
+    fallbacks=[]
+    )
+
+    app.add_handler(deposit_conv)
 
     
     #handler for profile button
@@ -81,20 +93,9 @@ def main():
     #handler for deposit button
     app.add_handler(MessageHandler(filters.Regex("^💳 Deposit$"), deposit))
 
-    #handler for Enter amount button in deposit button
-    deposit_conv = ConversationHandler(
-    entry_points=[
-        MessageHandler(filters.Regex("^💰 Enter Amount$"), enter_amount)
-    ],
-    states={
-        AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_amount)],
-        WAIT_DONE: [CallbackQueryHandler(done_callback, pattern="^deposit_done$")],
-        UPI_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)],
-        UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
-    },
-    fallbacks=[]
-    )
-
+    # ---------------- TEMPORARY HANDLER (DELETE LATER) ----------------
+    app.add_handler(MessageHandler(filters.PHOTO, get_file_id))
+    # ---------------- END TEMPORARY HANDLER ----------------
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

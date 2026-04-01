@@ -15,6 +15,9 @@ from handlers.balance import balance
 #importing check in logic from check.py
 from handlers.check import checkin
 
+#importing back logic from back.py
+from handlers.back import go_back
+
 #importing deposit logic from deposit.py
 from handlers.deposit import deposit
 
@@ -46,6 +49,9 @@ def main():
 
     #handler for check in button
     app.add_handler(MessageHandler(filters.Regex("^✅ Check-in$"), checkin))
+
+    #handler for back button
+    app.add_handler(MessageHandler(filters.Regex("^🔙 Back$"), go_back))
 
     #handler for deposit button
     app.add_handler(MessageHandler(filters.Regex("^💳 Deposit$"), deposit))

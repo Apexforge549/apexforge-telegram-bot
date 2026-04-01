@@ -34,6 +34,14 @@ from handlers.deposit import (
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+# ---------------- TEMPORARY CODE (DELETE LATER) ----------------
+# This is used to get file_id of QR image
+async def get_file_id(update, context):
+    photo = update.message.photo[-1]
+    print("FILE_ID:", photo.file_id)
+# ---------------- END TEMPORARY CODE ----------------
+
+
 #Bot connection
 def main():
 
@@ -51,7 +59,13 @@ def main():
     )
 
     app.add_handler(conv_handler)
+    app.add_handler(deposit_conv)
 
+    # ---------------- TEMPORARY HANDLER (DELETE LATER) ----------------
+    app.add_handler(MessageHandler(filters.PHOTO, get_file_id))
+    # ---------------- END TEMPORARY HANDLER ----------------
+
+    
     #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
 
@@ -80,8 +94,6 @@ def main():
     },
     fallbacks=[]
     )
-
-    app.add_handler(deposit_conv)
 
 
     print("Bot is running...")

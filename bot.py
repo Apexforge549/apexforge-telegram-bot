@@ -54,7 +54,7 @@ def main():
     
 
     #handler for Enter amount button in deposit button
-deposit_conv = ConversationHandler(
+    deposit_conv = ConversationHandler(
     entry_points=[
         MessageHandler(filters.Regex("^💰 Enter Amount$"), enter_amount)
     ],
@@ -66,7 +66,7 @@ deposit_conv = ConversationHandler(
     },
     fallbacks=[],
     per_message=True   # ✅ ADD THIS
-)
+    )
 
     app.add_handler(deposit_conv)
 

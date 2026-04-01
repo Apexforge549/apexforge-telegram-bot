@@ -27,7 +27,7 @@ IST = ZoneInfo("Asia/Kolkata")
 # States
 AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID = range(4)
 
-QR_FILE_ID = "PUT_YOUR_QR_FILE_ID_HERE"
+QR_FILE_ID = "AgACAgUAAxkBAAPoac00dDegXy5ZQbMHPn-nJ78_-SQAAnYPaxtFXmlWRuPI0cZyV2IBAAMCAAN4AAM6BA"
 
 
 # ---------------- ENTRY ----------------

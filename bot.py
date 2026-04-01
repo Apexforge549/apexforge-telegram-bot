@@ -64,8 +64,7 @@ def main():
         UPI_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)],
         UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
     },
-    fallbacks=[],
-    per_message=True   # ✅ ADD THIS
+    fallbacks=[]
     )
 
     app.add_handler(deposit_conv)

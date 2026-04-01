@@ -15,7 +15,8 @@ main_keyboard = ReplyKeyboardMarkup(
 deposit_keyboard = ReplyKeyboardMarkup(
     [
         ["💰 Enter Amount"],
-        ["📜 Deposit History"]
+        ["📜 Deposit History"],
+        ["🔙 Back"]
     ],
     resize_keyboard=True
 )

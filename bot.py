@@ -2,6 +2,7 @@ print("NEW DEPLOYMENT:5 WORKING")
 
 import os
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler
+from telegram.ext import CallbackQueryHandler
 
 #importing start logic from start.py
 from handlers.start import start, set_username, USERNAME

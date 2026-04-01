@@ -21,6 +21,16 @@ from handlers.back import go_back
 #importing deposit logic from deposit.py
 from handlers.deposit import deposit
 
+#importing the main deposit logic from deposit.py
+from handlers.deposit import (
+    enter_amount,
+    handle_amount,
+    done_callback,
+    handle_upi_name,
+    handle_upi_id,
+    AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID
+)
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -55,6 +65,22 @@ def main():
 
     #handler for deposit button
     app.add_handler(MessageHandler(filters.Regex("^💳 Deposit$"), deposit))
+
+    #handler for Enter amount button in deposit button
+    deposit_conv = ConversationHandler(
+    entry_points=[
+        MessageHandler(filters.Regex("^💰 Enter Amount$"), enter_amount)
+    ],
+    states={
+        AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_amount)],
+        WAIT_DONE: [CallbackQueryHandler(done_callback, pattern="^deposit_done$")],
+        UPI_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)],
+        UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
+    },
+    fallbacks=[]
+)
+app.add_handler(deposit_conv)
+
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

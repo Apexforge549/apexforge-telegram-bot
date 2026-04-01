@@ -1,6 +1,13 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from keyboards import deposit_keyboard
+import re
+import uuid
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ConversationHandler
+from database import users_collection, db
 
 
 async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,15 +18,6 @@ async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # Main deposit logic
-import re
-import uuid
-from datetime import datetime
-from zoneinfo import ZoneInfo
-
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ConversationHandler
-from database import users_collection, db
-
 transactions_collection = db["transactions"]
 
 IST = ZoneInfo("Asia/Kolkata")
@@ -144,3 +142,56 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     return ConversationHandler.END
+
+
+#Logic for deposit history button
+transactions_collection = db["transactions"]
+IST = ZoneInfo("Asia/Kolkata")
+
+
+async def deposit_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_id = update.effective_user.id
+
+    # Fetch only this user's deposit transactions
+    deposits = list(
+        transactions_collection.find(
+            {
+                "uid": user_id,
+                "type": "deposit"
+            }
+        ).sort("created_at", -1).limit(5)
+    )
+
+    if not deposits:
+        await update.message.reply_text(
+            "📭 *No deposit history found.*",
+            parse_mode="Markdown"
+        )
+        return
+
+    message = "📜 *Your Recent Deposit History*\n\n"
+
+    for txn in deposits:
+
+        txn_id = txn.get("txn_id", "N/A")
+        amount = txn.get("amount", 0)
+        status = txn.get("status", "pending").capitalize()
+
+        created_at = txn.get("created_at")
+
+        # Convert time to IST (if stored in UTC)
+        if created_at:
+            created_at = created_at.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
+            date_str = created_at.strftime("%d %b %Y, %I:%M %p")
+        else:
+            date_str = "N/A"
+
+        message += (
+            f"🆔 *Txn ID:* `{txn_id}`\n"
+            f"💰 *Amount:* ₹{amount}\n"
+            f"📅 *Date:* {date_str}\n"
+            f"📊 *Status:* {status}\n\n"
+        )
+
+    await update.message.reply_text(message, parse_mode="Markdown")

@@ -15,6 +15,9 @@ from handlers.balance import balance
 #importing check in logic from check.py
 from handlers.check import checkin
 
+#importing deposit logic from deposit.py
+from handlers.deposit import deposit
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -43,6 +46,9 @@ def main():
 
     #handler for check in button
     app.add_handler(MessageHandler(filters.Regex("^✅ Check-in$"), checkin))
+
+    #handler for deposit button
+    app.add_handler(MessageHandler(filters.Regex("^💳 Deposit$"), deposit))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

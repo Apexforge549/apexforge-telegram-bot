@@ -32,3 +32,9 @@ withdraw_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
+# Cancel keyboard
+cancel_keyboard = ReplyKeyboardMarkup(
+    [["❌ Cancel"]],
+    resize_keyboard=True
+)
+

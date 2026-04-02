@@ -136,7 +136,7 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "✅ *Deposit Request Submitted*\n\n"
         "⏳ Kindly wait patiently.\n"
-        "Your request will be verified within *6 hours*.\n\n"
+        "Your request will be verified within *1 hours*.\n\n"
         "🙏 Thank you for your patience!",
         parse_mode="Markdown"
     )

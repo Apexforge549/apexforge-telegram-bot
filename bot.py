@@ -38,6 +38,17 @@ from handlers.deposit import (
 # Importing the withdraw menu from withdraw.py
 from handlers.withdraw import withdraw
 
+# Importing the withdraw logic
+from handlers.withdraw import (
+    withdraw,
+    withdraw_enter_amount,
+    handle_withdraw_amount,
+    handle_upi_name,
+    handle_upi_id,
+    cancel_withdraw,
+    AMOUNT, UPI_NAME, UPI_ID
+)
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -74,6 +85,35 @@ def main():
     )
 
     app.add_handler(deposit_conv)
+
+    # Handler for withdraw amount buttion in withdraw button
+    withdraw_conv = ConversationHandler(
+    entry_points=[
+        MessageHandler(filters.Regex("^💸 Withdraw Amount$"), withdraw_enter_amount)
+    ],
+    states={
+        AMOUNT: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_withdraw_amount)
+        ],
+
+        UPI_NAME: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
+        ],
+
+        UPI_ID: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
+        ],
+    },
+    fallbacks=[
+        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw)
+    ]
+    )
+
+app.add_handler(withdraw_conv)
+
 
     
     #handler for profile button

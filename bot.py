@@ -32,6 +32,7 @@ from handlers.deposit import (
     done_callback,
     handle_upi_name,
     handle_upi_id,
+    cancel_deposit,
     AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID
 )
 

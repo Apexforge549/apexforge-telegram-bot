@@ -1,11 +1,9 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from keyboards import cancel_keyboard, deposit_keyboard
-import re
 import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from database import users_collection, db
 
 
@@ -16,9 +14,9 @@ async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=deposit_keyboard
     )
 
+
 # Main deposit logic
 transactions_collection = db["transactions"]
-
 IST = ZoneInfo("Asia/Kolkata")
 
 # States
@@ -43,9 +41,7 @@ async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TY
     text = update.message.text.strip()
 
     if not text.isdigit():
-        await update.message.reply_text(
-            "❌ Write the amount in numbers only."
-        )
+        await update.message.reply_text("❌ Write the amount in numbers only.")
         return AMOUNT
 
     amount = int(text)
@@ -116,7 +112,6 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = users_collection.find_one({"uid": user_id})
 
     txn_id = str(uuid.uuid4())[:8]
-
     now_ist = datetime.now(IST)
 
     # SAVE TO DB
@@ -132,13 +127,12 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "created_at": now_ist
     })
 
-    # CLEAR SESSION DATA
     context.user_data.clear()
 
     await update.message.reply_text(
         "✅ *Deposit Request Submitted*\n\n"
         "⏳ Kindly wait patiently.\n"
-        "Your request will be verified within *1 hours*.\n\n"
+        "Your request will be verified within 1 hour.\n\n"
         "🙏 Thank you for your patience!",
         parse_mode="Markdown",
         reply_markup=deposit_keyboard
@@ -146,7 +140,7 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return ConversationHandler.END
 
-    
+
 # ---------------- CANCEL ----------------
 async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -160,22 +154,14 @@ async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 
-#Logic for deposit history button
-transactions_collection = db["transactions"]
-IST = ZoneInfo("Asia/Kolkata")
-
-
+# ---------------- HISTORY ----------------
 async def deposit_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.effective_user.id
 
-    # Fetch only this user's deposit transactions
     deposits = list(
         transactions_collection.find(
-            {
-                "uid": user_id,
-                "type": "deposit"
-            }
+            {"uid": user_id, "type": "deposit"}
         ).sort("created_at", -1).limit(5)
     )
 
@@ -196,7 +182,6 @@ async def deposit_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         created_at = txn.get("created_at")
 
-        # Convert time to IST (if stored in UTC)
         if created_at:
             created_at = created_at.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
             date_str = created_at.strftime("%d %b %Y, %I:%M %p")

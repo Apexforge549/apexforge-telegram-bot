@@ -25,7 +25,7 @@ deposit_keyboard = ReplyKeyboardMarkup(
 # Withdrawal keyboad
 withdraw_keyboard = ReplyKeyboardMarkup(
     [
-        ["💰 Enter Amount"],
+        ["💸 Withdraw Amount"],
         ["📜 Withdraw History"],
         ["🔙 Back"]
     ],

@@ -27,8 +27,8 @@ from handlers.deposit import deposit_history
 
 #importing the main deposit logic from deposit.py
 from handlers.deposit import (
-    enter_amount,
-    handle_amount,
+    deposit_enter_amount,
+    handle_deposit_amount,
     done_callback,
     handle_upi_name,
     handle_upi_id,
@@ -73,15 +73,29 @@ def main():
     #handler for Enter amount button in deposit button
     deposit_conv = ConversationHandler(
     entry_points=[
-        MessageHandler(filters.Regex("^💰 Enter Amount$"), enter_amount)
+        MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
     ],
     states={
-        AMOUNT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_amount)],
-        WAIT_DONE: [CallbackQueryHandler(done_callback, pattern="^deposit_done$")],
-        UPI_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)],
-        UPI_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)],
+        AMOUNT: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
+        ],
+        WAIT_DONE: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            CallbackQueryHandler(done_callback, pattern="^deposit_done$")
+        ],
+        UPI_NAME: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
+        ],
+        UPI_ID: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
+        ],
     },
-    fallbacks=[]
+    fallbacks=[
+        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+    ]
     )
 
     app.add_handler(deposit_conv)
@@ -96,12 +110,10 @@ def main():
             MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_withdraw_amount)
         ],
-
         UPI_NAME: [
             MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
         ],
-
         UPI_ID: [
             MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)

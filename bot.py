@@ -35,6 +35,9 @@ from handlers.deposit import (
     AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID
 )
 
+# Importing the withdraw menu from withdraw.py
+from handlers.withdraw import withdraw
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -90,6 +93,9 @@ def main():
 
     #handler for deposit history 
     app.add_handler(MessageHandler(filters.Regex("^📜 Deposit History$"), deposit_history))
+
+    # Handler for withdraw menu
+    app.add_handler(MessageHandler(filters.Regex("^📤 Withdraw$"), withdraw))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

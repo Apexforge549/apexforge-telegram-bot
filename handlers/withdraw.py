@@ -50,6 +50,14 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
 
     amount = int(text)
 
+    # 🔥 Minimum withdrawal check
+    if amount < 10:
+        await update.message.reply_text(
+            "❌ Minimum withdrawal amount is ₹10.",
+            reply_markup=withdraw_keyboard
+        )
+        return ConversationHandler.END
+
     user_id = update.effective_user.id
     user = users_collection.find_one({"uid": user_id})
 

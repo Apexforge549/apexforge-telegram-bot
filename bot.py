@@ -22,6 +22,9 @@ from handlers.back import go_back
 #importing deposit logic from deposit.py
 from handlers.deposit import deposit
 
+#importing deposit history logic from deposit.py
+from handlers.deposit import deposit_history
+
 #importing the main deposit logic from deposit.py
 from handlers.deposit import (
     enter_amount,
@@ -84,6 +87,9 @@ def main():
 
     #handler for deposit button
     app.add_handler(MessageHandler(filters.Regex("^💳 Deposit$"), deposit))
+
+    #handler for deposit history 
+    app.add_handler(MessageHandler(filters.Regex("^📜 Deposit History$"), deposit_history))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

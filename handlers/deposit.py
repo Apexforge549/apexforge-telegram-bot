@@ -1,12 +1,11 @@
 from telegram import Update
-from telegram.ext import ContextTypes
-from keyboards import deposit_keyboard
+from telegram.ext import ContextTypes, ConversationHandler
+from keyboards import cancel_keyboard, deposit_keyboard
 import re
 import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ConversationHandler
 from database import users_collection, db
 
 
@@ -29,16 +28,17 @@ QR_FILE_ID = "AgACAgUAAxkBAAPoac00dDegXy5ZQbMHPn-nJ78_-SQAAnYPaxtFXmlWRuPI0cZyV2
 
 
 # ---------------- ENTRY ----------------
-async def enter_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def deposit_enter_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "💳 *Deposit*\n\n💰 Please type the amount you want to deposit:",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
+        reply_markup=cancel_keyboard
     )
     return AMOUNT
 
 
 # ---------------- AMOUNT ----------------
-async def handle_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = update.message.text.strip()
 
@@ -85,6 +85,7 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.reply_text(
         "📝 Enter your *UPI Name* (Account Holder Name):",
         parse_mode="Markdown"
+        reply_markup=cancel_keyboard
     )
 
     return UPI_NAME
@@ -98,6 +99,7 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
         parse_mode="Markdown"
+        reply_markup=cancel_keyboard
     )
 
     return UPI_ID
@@ -139,6 +141,20 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Your request will be verified within *1 hours*.\n\n"
         "🙏 Thank you for your patience!",
         parse_mode="Markdown"
+        reply_markup=deposit_keyboard
+    )
+
+    return ConversationHandler.END
+
+    
+# ---------------- CANCEL ----------------
+async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Deposit cancelled.\n\nReturning to Deposit Menu.",
+        reply_markup=deposit_keyboard
     )
 
     return ConversationHandler.END

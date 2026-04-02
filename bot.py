@@ -19,7 +19,7 @@ from handlers.check import checkin
 #importing back logic from back.py
 from handlers.back import go_back
 
-#importing deposit logic from deposit.py
+#importing deposit menu from deposit.py
 from handlers.deposit import deposit
 
 #importing deposit history logic from deposit.py
@@ -38,6 +38,9 @@ from handlers.deposit import (
 
 # Importing the withdraw menu from withdraw.py
 from handlers.withdraw import withdraw
+
+# Importing the withdraw history
+from handlers.withdraw import withdraw_history
 
 # Importing the withdraw logic
 from handlers.withdraw import (
@@ -149,6 +152,9 @@ def main():
 
     # Handler for withdraw menu
     app.add_handler(MessageHandler(filters.Regex("^📤 Withdraw$"), withdraw))
+
+    # Handler for withdraw history
+    app.add_handler(MessageHandler(filters.Regex("^📜 Withdraw History$"), withdraw_history))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

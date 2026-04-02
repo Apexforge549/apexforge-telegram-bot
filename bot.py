@@ -44,8 +44,8 @@ from handlers.withdraw import (
     withdraw,
     withdraw_enter_amount,
     handle_withdraw_amount,
-    handle_upi_name,
-    handle_upi_id,
+    handle_w_upi_name,
+    handle_w_upi_id,
     cancel_withdraw,
     W_AMOUNT, W_UPI_NAME, W_UPI_ID
 )

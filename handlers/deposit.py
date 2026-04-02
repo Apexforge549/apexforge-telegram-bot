@@ -84,7 +84,7 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.message.reply_text(
         "📝 Enter your *UPI Name* (Account Holder Name):",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
         reply_markup=cancel_keyboard
     )
 
@@ -98,7 +98,7 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
         reply_markup=cancel_keyboard
     )
 
@@ -140,7 +140,7 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "⏳ Kindly wait patiently.\n"
         "Your request will be verified within *1 hours*.\n\n"
         "🙏 Thank you for your patience!",
-        parse_mode="Markdown"
+        parse_mode="Markdown",
         reply_markup=deposit_keyboard
     )
 

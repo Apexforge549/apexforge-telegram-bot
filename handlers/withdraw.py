@@ -24,7 +24,7 @@ transactions_collection = db["transactions"]
 IST = ZoneInfo("Asia/Kolkata")
 
 # States
-AMOUNT, UPI_NAME, UPI_ID = range(3)
+W_AMOUNT, W_UPI_NAME, W_UPI_ID = range(3)
 
 
 # ---------------- ENTER AMOUNT ----------------
@@ -36,7 +36,7 @@ async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TY
         reply_markup=cancel_keyboard
     )
 
-    return AMOUNT
+    return W_AMOUNT
 
 
 # ---------------- HANDLE AMOUNT ----------------
@@ -47,7 +47,7 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
     # Only numbers
     if not text.isdigit():
         await update.message.reply_text("❌ Send the amount in numbers only.")
-        return AMOUNT
+        return W_AMOUNT
 
     amount = int(text)
 
@@ -71,11 +71,11 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
         reply_markup=cancel_keyboard
     )
 
-    return UPI_NAME
+    return W_UPI_NAME
 
 
 # ---------------- HANDLE UPI NAME ----------------
-async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_w_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data["upi_name"] = update.message.text.strip()
 
@@ -84,11 +84,11 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=cancel_keyboard
     )
 
-    return UPI_ID
+    return W_UPI_ID
 
 
 # ---------------- HANDLE UPI ID ----------------
-async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_w_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     upi_id = update.message.text.strip()
 

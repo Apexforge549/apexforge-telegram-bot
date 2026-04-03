@@ -41,14 +41,6 @@ async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TY
 # ---------------- HANDLE AMOUNT ----------------
 async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    text = update.message.text.strip()
-
-    # Only numbers
-    if not text.isdigit():
-        await update.message.reply_text("❌ Send the amount in numbers only.")
-        return W_AMOUNT
-
-    
     # Withdraw limit check
     today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
     user_limit = user.get("withdraw_limit", 0)
@@ -74,7 +66,14 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
             reply_markup=withdraw_keyboard
         )
         return ConversationHandler.END
-    
+
+    text = update.message.text.strip()
+
+    # Only numbers
+    if not text.isdigit():
+        await update.message.reply_text("❌ Send the amount in numbers only.")
+        return W_AMOUNT
+
     amount = int(text)
 
     # 🔥 Minimum withdrawal check

@@ -50,7 +50,7 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Show cancel button
     await update.message.reply_text(
-        "❌ Cancel",
+        "🎯 Best of luck for your match! Play smart and give your best! 💪🔥",
         reply_markup=cancel_keyboard
     )
 

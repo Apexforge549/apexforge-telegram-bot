@@ -161,3 +161,67 @@ async def handle_w_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     return ConversationHandler.END
+    
+# ---------------- CANCEL ----------------
+async def cancel_withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Withdrawal cancelled.\n\nReturning to Withdraw Menu.",
+        reply_markup=withdraw_keyboard
+    )
+
+    return ConversationHandler.END
+
+# ---------------- Withdraw history ----------------
+#transactions_collection = db["transactions"]
+#IST = ZoneInfo("Asia/Kolkata")
+
+
+async def withdraw_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    user_id = update.effective_user.id
+
+    # Fetch only THIS user's withdraw transactions
+    withdraws = list(
+        transactions_collection.find(
+            {
+                "uid": user_id,
+                "type": "withdraw"
+            }
+        ).sort("created_at", -1).limit(5)
+    )
+
+    if not withdraws:
+        await update.message.reply_text(
+            "📭 *No withdraw history found.*",
+            parse_mode="Markdown"
+        )
+        return
+
+    message = "📜 *Your Recent Withdraw History*\n\n"
+
+    for txn in withdraws:
+
+        txn_id = txn.get("txn_id", "N/A")
+        amount = txn.get("amount", 0)
+        status = txn.get("status", "pending").capitalize()
+
+        created_at = txn.get("created_at")
+
+        # Convert to IST
+        if created_at:
+            created_at = created_at.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
+            date_str = created_at.strftime("%d %b %Y, %I:%M %p")
+        else:
+            date_str = "N/A"
+
+        message += (
+            f"🆔 *Txn ID:* `{txn_id}`\n"
+            f"💰 *Amount:* ₹{amount}\n"
+            f"📅 *Date:* {date_str}\n"
+            f"📊 *Status:* {status}\n\n"
+        )
+
+    await update.message.reply_text(message, parse_mode="Markdown")

@@ -48,6 +48,33 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
         await update.message.reply_text("❌ Send the amount in numbers only.")
         return W_AMOUNT
 
+    
+    # Withdraw limit check
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
+    user_limit = user.get("withdraw_limit", 0)
+    last_date = user.get("last_withdraw_date")
+
+    # Reset if new day
+    if last_date != today:
+        user_limit = 0
+        users_collection.update_one(
+            {"uid": user_id},
+            {
+                "$set": {
+                    "withdraw_limit": 0,
+                    "last_withdraw_date": today
+                }
+            }
+        )
+
+    # Limit check
+    if user_limit >= 3:
+    await update.message.reply_text(
+        "❌ You have reached your daily withdrawal limit (3 times).\n\nTry again tomorrow.",
+        reply_markup=withdraw_keyboard
+    )
+    return ConversationHandler.END
+    
     amount = int(text)
 
     # 🔥 Minimum withdrawal check
@@ -106,6 +133,12 @@ async def handle_w_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     txn_id = str(uuid.uuid4())[:8]
     now_ist = datetime.now(IST)
+
+    # Updating withdraw limit in the database
+    users_collection.update_one(
+        {"uid": user_id},
+        {"$inc": {"withdraw_limit": 1}}
+    )
 
     # SAVE TO DB
     transactions_collection.insert_one({

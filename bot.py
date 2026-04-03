@@ -53,6 +53,9 @@ from handlers.withdraw import (
     W_AMOUNT, W_UPI_NAME, W_UPI_ID
 )
 
+# Importing the tournaments menu from tournaments.py
+from handlers.tournaments import tournaments
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -155,6 +158,9 @@ def main():
 
     # Handler for withdraw history
     app.add_handler(MessageHandler(filters.Regex("^📜 Withdraw History$"), withdraw_history))
+
+    # Handler for tournaments menu
+    app.add_handler(MessageHandler(filters.Regex("^🏆 Tournaments$"), tournaments))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

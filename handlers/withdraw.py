@@ -69,11 +69,11 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
 
     # Limit check
     if user_limit >= 3:
-    await update.message.reply_text(
-        "❌ You have reached your daily withdrawal limit (3 times).\n\nTry again tomorrow.",
-        reply_markup=withdraw_keyboard
-    )
-    return ConversationHandler.END
+        await update.message.reply_text(
+            "❌ You have reached your daily withdrawal limit (3 times).\n\nTry again tomorrow.",
+            reply_markup=withdraw_keyboard
+        )
+        return ConversationHandler.END
     
     amount = int(text)
 

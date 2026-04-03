@@ -11,7 +11,7 @@ main_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-# Deposit keyboard
+# 💳 Deposit keyboard
 deposit_keyboard = ReplyKeyboardMarkup(
     [
         ["💰 Deposit Amount"],
@@ -22,7 +22,7 @@ deposit_keyboard = ReplyKeyboardMarkup(
 )
 
 
-# Withdrawal keyboad
+# 📤 Withdrawal keyboad
 withdraw_keyboard = ReplyKeyboardMarkup(
     [
         ["💸 Withdraw Amount"],
@@ -32,9 +32,18 @@ withdraw_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-# Cancel keyboard
+# ❌ Cancel keyboard
 cancel_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel"]],
     resize_keyboard=True
 )
 
+# 🏆 Tournaments keyboard
+tournament_keyboard = ReplyKeyboardMarkup(
+    [
+        ["🎮 Join Tournament"],
+        ["📊 Game Profile", "📜 Tournament History"],
+        ["🔙 Back"]
+    ],
+    resize_keyboard=True
+)

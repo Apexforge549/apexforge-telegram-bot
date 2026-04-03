@@ -16,9 +16,6 @@ async def withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-
-# Main withdraw logic
-
 transactions_collection = db["transactions"]
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -28,8 +25,33 @@ W_AMOUNT, W_UPI_NAME, W_UPI_ID = range(3)
 
 # ---------------- ENTER AMOUNT ----------------
 async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    
-    # Withdraw limit check
+
+    await update.message.reply_text(
+        "💸 *Withdraw*\n\n💸 Enter the amount you want to withdraw:",
+        parse_mode="Markdown",
+        reply_markup=cancel_keyboard
+    )
+
+    return W_AMOUNT
+
+
+# ---------------- HANDLE AMOUNT ----------------
+async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    text = update.message.text.strip()
+
+    # Only numbers
+    if not text.isdigit():
+        await update.message.reply_text("❌ Send the amount in numbers only.")
+        return W_AMOUNT
+
+    amount = int(text)
+
+    user_id = update.effective_user.id
+    user = users_collection.find_one({"uid": user_id})
+
+    # 🔥 DAILY LIMIT LOGIC (CORRECT PLACE)
+
     today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
     user_limit = user.get("withdraw_limit", 0)
     last_date = user.get("last_withdraw_date")
@@ -55,29 +77,6 @@ async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TY
         )
         return ConversationHandler.END
 
-    await update.message.reply_text(
-        "💸 *Withdraw*\n\n💰 Enter the amount you want to withdraw:",
-        parse_mode="Markdown",
-        reply_markup=cancel_keyboard
-    )
-
-    return W_AMOUNT
-
-
-# ---------------- HANDLE AMOUNT ----------------
-async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    
-
-    text = update.message.text.strip()
-
-    # Only numbers
-    if not text.isdigit():
-        await update.message.reply_text("❌ Send the amount in numbers only.")
-        return W_AMOUNT
-
-    amount = int(text)
-
     # 🔥 Minimum withdrawal check
     if amount < 10:
         await update.message.reply_text(
@@ -85,9 +84,6 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
             reply_markup=withdraw_keyboard
         )
         return ConversationHandler.END
-
-    user_id = update.effective_user.id
-    user = users_collection.find_one({"uid": user_id})
 
     winning_balance = user.get("winning_balance", 0)
 
@@ -135,7 +131,7 @@ async def handle_w_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     txn_id = str(uuid.uuid4())[:8]
     now_ist = datetime.now(IST)
 
-    # Updating withdraw limit in the database
+    # Increment withdraw limit
     users_collection.update_one(
         {"uid": user_id},
         {"$inc": {"withdraw_limit": 1}}
@@ -165,70 +161,3 @@ async def handle_w_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     return ConversationHandler.END
-
-
-# ---------------- CANCEL ----------------
-async def cancel_withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    context.user_data.clear()
-
-    await update.message.reply_text(
-        "❌ Withdrawal cancelled.\n\nReturning to Withdraw Menu.",
-        reply_markup=withdraw_keyboard
-    )
-
-    return ConversationHandler.END
-
-
-
-# ---------------- Withdraw history ----------------
-#transactions_collection = db["transactions"]
-#IST = ZoneInfo("Asia/Kolkata")
-
-
-async def withdraw_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    user_id = update.effective_user.id
-
-    # Fetch only THIS user's withdraw transactions
-    withdraws = list(
-        transactions_collection.find(
-            {
-                "uid": user_id,
-                "type": "withdraw"
-            }
-        ).sort("created_at", -1).limit(5)
-    )
-
-    if not withdraws:
-        await update.message.reply_text(
-            "📭 *No withdraw history found.*",
-            parse_mode="Markdown"
-        )
-        return
-
-    message = "📜 *Your Recent Withdraw History*\n\n"
-
-    for txn in withdraws:
-
-        txn_id = txn.get("txn_id", "N/A")
-        amount = txn.get("amount", 0)
-        status = txn.get("status", "pending").capitalize()
-
-        created_at = txn.get("created_at")
-
-        # Convert to IST
-        if created_at:
-            created_at = created_at.replace(tzinfo=ZoneInfo("UTC")).astimezone(IST)
-            date_str = created_at.strftime("%d %b %Y, %I:%M %p")
-        else:
-            date_str = "N/A"
-
-        message += (
-            f"🆔 *Txn ID:* `{txn_id}`\n"
-            f"💰 *Amount:* ₹{amount}\n"
-            f"📅 *Date:* {date_str}\n"
-            f"📊 *Status:* {status}\n\n"
-        )
-
-    await update.message.reply_text(message, parse_mode="Markdown")

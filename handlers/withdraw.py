@@ -28,19 +28,7 @@ W_AMOUNT, W_UPI_NAME, W_UPI_ID = range(3)
 
 # ---------------- ENTER AMOUNT ----------------
 async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    await update.message.reply_text(
-        "💸 *Withdraw*\n\n💰 Enter the amount you want to withdraw:",
-        parse_mode="Markdown",
-        reply_markup=cancel_keyboard
-    )
-
-    return W_AMOUNT
-
-
-# ---------------- HANDLE AMOUNT ----------------
-async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
+    
     # Withdraw limit check
     today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
     user_limit = user.get("withdraw_limit", 0)
@@ -66,6 +54,20 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
             reply_markup=withdraw_keyboard
         )
         return ConversationHandler.END
+
+    await update.message.reply_text(
+        "💸 *Withdraw*\n\n💰 Enter the amount you want to withdraw:",
+        parse_mode="Markdown",
+        reply_markup=cancel_keyboard
+    )
+
+    return W_AMOUNT
+
+
+# ---------------- HANDLE AMOUNT ----------------
+async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    
 
     text = update.message.text.strip()
 

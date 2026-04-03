@@ -2,7 +2,8 @@ import re
 from datetime import datetime
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
-
+from zoneinfo import ZoneInfo
+from datetime import datetime
 from database import users_collection
 from keyboards import main_keyboard
 
@@ -64,7 +65,9 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "last_checkin": None,
         "balance": 0,
         "deposit_balance": 0,
-        "winning_balance": 0
+        "winning_balance": 0,
+        "withdraw_limit": 0,
+        "last_withdraw_date": datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
     })
 
     await update.message.reply_text(

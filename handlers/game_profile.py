@@ -1,8 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from database import users_collection
-from keyboards import cancel_keyboard
-from keyboards import tournament_keyboard
+from keyboards import cancel_keyboard, tournament_keyboard
 
 # States
 G_UID, G_USERNAME = range(2)
@@ -14,7 +13,6 @@ async def game_profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user = users_collection.find_one({"uid": user_id})
 
-    # Check if profile exists
     if "game_uid" in user and "game_username" in user and "wins" in user:
 
         keyboard = InlineKeyboardMarkup([
@@ -32,7 +30,6 @@ async def game_profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         return ConversationHandler.END
 
-    # First-time setup
     await update.message.reply_text(
         "🆔 Enter your Game UID (numbers only):",
         reply_markup=cancel_keyboard
@@ -60,7 +57,6 @@ async def handle_game_uid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     uid_text = update.message.text.strip()
 
-    # Only numbers check
     if not uid_text.isdigit():
         await update.message.reply_text("❌ Game UID must contain numbers only.")
         return G_UID
@@ -87,7 +83,7 @@ async def handle_game_username(update: Update, context: ContextTypes.DEFAULT_TYP
             "$set": {
                 "game_uid": context.user_data["game_uid"],
                 "game_username": username,
-                "wins": 0  # initialize if not present
+                "wins": 0
             }
         }
     )
@@ -95,7 +91,8 @@ async def handle_game_username(update: Update, context: ContextTypes.DEFAULT_TYP
     context.user_data.clear()
 
     await update.message.reply_text(
-        "✅ Game profile saved successfully!"
+        "✅ Game profile saved successfully!",
+        reply_markup=tournament_keyboard  # 🔥 UX FIX
     )
 
     return ConversationHandler.END
@@ -107,8 +104,8 @@ async def cancel_game_profile(update: Update, context: ContextTypes.DEFAULT_TYPE
     context.user_data.clear()
 
     await update.message.reply_text(
-      "❌ Process cancelled.\n\nReturning to 🏆Tournament Menu",
-      reply_markup=tournament_keyboard
+        "❌ Process cancelled.\n\nReturning to 🏆 Tournament Menu",
+        reply_markup=tournament_keyboard
     )
 
     return ConversationHandler.END

@@ -146,7 +146,7 @@ def main():
     # Conversation handler for game profile button
     game_profile_conv = ConversationHandler(
     entry_points=[
-        MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile)
+        MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile),
         CallbackQueryHandler(change_profile_start, pattern="^change_profile$")
     ],
     states={

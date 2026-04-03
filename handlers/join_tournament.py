@@ -148,7 +148,8 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.message.reply_text(
         "✅ Successfully joined tournament!\n\n"
-        "📢 Room details will be sent before match."
+        "📢 Room details will be sent before match.",
+        reply_markup=tournament_keyboard
     )
 
 

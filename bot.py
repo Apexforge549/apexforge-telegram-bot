@@ -56,6 +56,16 @@ from handlers.withdraw import (
 # Importing the tournaments menu from tournaments.py
 from handlers.tournaments import tournaments
 
+# Importing the game profile logic from game_profile.py
+from handlers.game_profile import (
+    game_profile,
+    change_profile_start,
+    handle_game_uid,
+    handle_game_username,
+    cancel_game_profile,
+    G_UID, G_USERNAME
+)
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -77,7 +87,7 @@ def main():
     app.add_handler(conv_handler)
     
 
-    #handler for Enter amount button in deposit button
+    # Conversation handler for Enter amount button in deposit button
     deposit_conv = ConversationHandler(
     entry_points=[
         MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
@@ -107,7 +117,7 @@ def main():
 
     app.add_handler(deposit_conv)
 
-    # Handler for withdraw amount buttion in withdraw button
+    # Conversation Handler for withdraw amount button in withdraw button
     withdraw_conv = ConversationHandler(
     entry_points=[
         MessageHandler(filters.Regex("^💸 Withdraw Amount$"), withdraw_enter_amount)
@@ -133,7 +143,27 @@ def main():
 
     app.add_handler(withdraw_conv)
 
+    # Conversation handler for game profile button
+    game_profile_conv = ConversationHandler(
+    entry_points=[
+        CallbackQueryHandler(change_profile_start, pattern="^change_profile$")
+    ],
+    states={
+        G_UID: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_uid)
+        ],
+        G_USERNAME: [
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_username)
+        ],
+    },
+    fallbacks=[
+        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile)
+    ]
+    )
 
+    app.add_handler(game_profile_conv)
     
     #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
@@ -161,6 +191,9 @@ def main():
 
     # Handler for tournaments menu
     app.add_handler(MessageHandler(filters.Regex("^🏆 Tournaments$"), tournaments))
+
+    # Handler for game profile
+    app.add_handler(MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

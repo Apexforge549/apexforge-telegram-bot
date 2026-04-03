@@ -122,6 +122,15 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         }
     )
 
+    # 🔥 CHECK AND UPDATE STATUS TO FULL
+    updated_tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
+
+    if len(updated_tournament["joined_users"]) >= updated_tournament["slots"]:
+        tournaments_collection.update_one(
+            {"tournament_id": tournament_id},
+            {"$set": {"status": "full"}}
+        )
+
     # 🔥 SAVE TRANSACTION
     txn_id = str(uuid.uuid4())[:8]
 

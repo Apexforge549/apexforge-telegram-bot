@@ -66,6 +66,9 @@ from handlers.game_profile import (
     G_UID, G_USERNAME
 )
 
+# Importing join tournament logic from join_tournament.py
+from handlers.join_tournament import join_tournament, join_callback, cancel_join
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -195,6 +198,13 @@ def main():
 
     # Handler for game profile
     app.add_handler(MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile))
+
+    # Handler for join tournament button
+    app.add_handler(MessageHandler(filters.Regex("^🎮 Join Tournament$"), join_tournament))
+    # Inline join button
+    app.add_handler(CallbackQueryHandler(join_callback, pattern="^join_")) 
+    # Cancel button
+    app.add_handler(MessageHandler(filters.Regex("Cancel"), cancel_join))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

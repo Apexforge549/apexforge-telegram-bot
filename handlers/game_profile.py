@@ -2,6 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from database import users_collection
 from keyboards import cancel_keyboard
+from keyboards import tournament_keyboard
 
 # States
 G_UID, G_USERNAME = range(2)
@@ -106,7 +107,7 @@ async def cancel_game_profile(update: Update, context: ContextTypes.DEFAULT_TYPE
     context.user_data.clear()
 
     await update.message.reply_text(
-      "❌ Process cancelled.",
+      "❌ Process cancelled.\n\nReturning to 🏆Tournament Menu",
       reply_markup=tournament_keyboard
     )
 

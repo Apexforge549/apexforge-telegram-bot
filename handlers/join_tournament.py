@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from database import db, users_collection
 from keyboards import cancel_keyboard, tournament_keyboard
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import uuid
 
@@ -92,6 +92,34 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     tournament_id = query.data.split("_")[1]
     tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
+
+    
+
+    # 🔥 TIME CHECK LOGIC
+    match_time_str = tournament["match_time"]  # e.g. "10:00 AM"
+
+    match_time = datetime.strptime(match_time_str, "%I:%M %p").replace(
+        year=datetime.now(IST).year,
+        month=datetime.now(IST).month,
+        day=datetime.now(IST).day,
+        tzinfo=IST
+    )
+
+    current_time = datetime.now(IST)
+
+    # 🔥 CLOSE BEFORE 5 MINUTES
+    if current_time >= (match_time - timedelta(minutes=5)):
+
+        tournaments_collection.update_one(
+            {"tournament_id": tournament_id},
+            {"$set": {"status": "closed"}}
+        )
+
+    await query.message.reply_text(
+        "❌ Registration closed. Match starting in less than 5 minutes."
+    )
+
+    return
 
     # 🔥 SLOT CHECK
     if len(tournament["joined_users"]) >= tournament["slots"]:

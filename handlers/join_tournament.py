@@ -54,8 +54,23 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Show cancel button
     await update.message.reply_text(
-        "🎯 Best of luck for your match! Play smart and give your best! 💪🔥",
-        reply_markup=cancel_keyboard
+    "🎯 *TOURNAMENT KEY POINTS* 🎯\n\n"
+
+    "🔥 *1. Minimum Players Required*\n"
+    "At least *10 players* must join the tournament.\n"
+    "If not, don’t worry — *your entry fee will be fully refunded 💸*\n\n"
+
+    "💰 *2. Prize Pool System*\n"
+    "The prize pool will be *80% of the total entry fees collected* 🏆\n\n"
+
+    "📢 *3. Transparency Guaranteed*\n"
+    "After the match ends, the *total entry fees collected* will be shared in the Telegram channel 📊\n\n"
+
+    "🥈 *4. Who Are Finalists?*\n"
+    "All players who reach the *last round (except the winner)* are considered *Finalists* 👑",
+
+    parse_mode="Markdown",
+    reply_markup=cancel_keyboard
     )
 
 

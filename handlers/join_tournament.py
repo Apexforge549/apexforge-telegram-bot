@@ -98,25 +98,25 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 🔥 TIME CHECK LOGIC
     match_time_str = tournament["match_time"]  # e.g. "10:00 AM"
 
-    match_time = datetime.strptime(match_time_str, "%I:%M %p").replace(
-        year=datetime.now(IST).year,
-        month=datetime.now(IST).month,
-        day=datetime.now(IST).day,
-        tzinfo=IST
-    )
+    # ✅ Proper parsing
+    today = datetime.now(IST).date()
+
+    match_time_naive = datetime.strptime(match_time_str, "%I:%M %p")
+
+    match_time = datetime.combine(today, match_time_naive.time()).replace(tzinfo=IST)
 
     current_time = datetime.now(IST)
 
-    # 🔥 CLOSE BEFORE 5 MINUTES
-    if current_time >= (match_time - timedelta(minutes=5)):
+    closing_time = match_time - timedelta(minutes=5)
 
+    if current_time >= closing_time:
         tournaments_collection.update_one(
             {"tournament_id": tournament_id},
             {"$set": {"status": "closed"}}
         )
-    print("Current:", current_time)
-    print("Match:", match_time)
-    print("Closing:", match_time - timedelta(minutes=5))
+
+    
+        
     await query.message.reply_text(
         "❌ Registration closed. Match starting in less than 5 minutes."
     )

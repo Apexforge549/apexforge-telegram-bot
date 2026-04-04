@@ -114,7 +114,9 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             {"tournament_id": tournament_id},
             {"$set": {"status": "closed"}}
         )
-
+    print("Current:", current_time)
+    print("Match:", match_time)
+    print("Closing:", match_time - timedelta(minutes=5))
     await query.message.reply_text(
         "❌ Registration closed. Match starting in less than 5 minutes."
     )

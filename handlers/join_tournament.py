@@ -37,7 +37,7 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "❌ No tournaments available right now.",
             reply_markup=tournament_keyboard
         )
-        return
+    return
 
     # Send each tournament
     for t in tournaments:

@@ -34,6 +34,6 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         "🚀 **Join Our Official Telegram Channel!** 🎮\n"
         "Stay updated with **real-time tournament updates**, announcements, and important info 📢⚡\n"
-        "Telegram channel: https://t.me/apexforge_esports_official",
+        "Telegram channel: https://t.me/+VEPaS_e6CzNmMDQ1",
         parse_mode="Markdown"
     )

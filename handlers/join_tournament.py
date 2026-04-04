@@ -94,9 +94,12 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
 
     # ✅ Time parsing
+    match_time_str = tournament["match_time"]  # e.g. "10:00 AM"
     today = datetime.now(IST).date()
     current_time = datetime.now(IST)
+    match_time_naive = datetime.strptime(match_time_str, "%I:%M %p")
     match_time = datetime.combine(today, match_time_naive.time()).replace(tzinfo=IST)
+    closing_time = match_time - timedelta(minutes=5)
 
     # 🔥 ONGOING CHECK
     if current_time >= match_time:
@@ -113,9 +116,6 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     
     # 🔥 TIME CHECK LOGIC
-    match_time_str = tournament["match_time"]  # e.g. "10:00 AM"
-    match_time_naive = datetime.strptime(match_time_str, "%I:%M %p")
-    closing_time = match_time - timedelta(minutes=5)
     if current_time >= closing_time:
         tournaments_collection.update_one(
             {"tournament_id": tournament_id},

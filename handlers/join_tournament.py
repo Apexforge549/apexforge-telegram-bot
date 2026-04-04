@@ -37,7 +37,7 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "❌ No tournaments available right now.",
             reply_markup=tournament_keyboard
         )
-    return
+        return
 
     # Send each tournament
     for t in tournaments:
@@ -115,13 +115,11 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             {"$set": {"status": "closed"}}
         )
 
-    
-        
-    await query.message.reply_text(
-        "❌ Registration closed. Match starting in less than 5 minutes."
-    )
+        await query.message.reply_text(
+            "❌ Registration closed. Match starting in less than 5 minutes."
+        )
 
-    return
+        return
 
     # 🔥 SLOT CHECK
     if len(tournament["joined_users"]) >= tournament["slots"]:

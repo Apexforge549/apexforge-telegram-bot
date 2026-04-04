@@ -53,7 +53,7 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
             #f"💸 Prize Pool: ₹{t['prize_pool']}\n"
             f"✅ Status: {t['status']}\n"
             f"👥 Slots: {len(t['joined_users'])}/{t['slots']}\n"
-            f"🏆 1st Prize: {t['first']}\n"
+            f"🏆 1st Prize: ✅{t['first']}\n"
             f"🏆 Finalist Prize: ✅{t['finalist']}\n"
             f"⏱︎ Match Time: {t['match_time']}\n",
             reply_markup=keyboard

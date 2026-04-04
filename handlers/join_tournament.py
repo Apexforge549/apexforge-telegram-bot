@@ -25,7 +25,12 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    tournaments = list(tournaments_collection.find({"status": "open"}))
+    #tournaments = list(tournaments_collection.find({"status": "open"}))
+    tournaments = list(
+        tournaments_collection.find({
+            "status": {"$in": ["open", "full", "closed"]}
+        })
+    )
 
     if not tournaments:
         await update.message.reply_text(
@@ -45,9 +50,11 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🎮 {t['game']} {t['mode']}\n"
             f"ℹ️ Tournament Id: {t['tournament_id']}\n"
             f"💰 Entry: ₹{t['entry_fee']}\n"
-            f"💸 Prize Pool: ₹{t['prize_pool']}\n"
+            #f"💸 Prize Pool: ₹{t['prize_pool']}\n"
             f"✅ Status: {t['status']}\n"
             f"👥 Slots: {len(t['joined_users'])}/{t['slots']}\n"
+            f"🏆 1st Prize: {t['first']}\n"
+            f"🏆 Finalist Prize: ✅{t['finalist']}\n"
             f"⏱︎ Match Time: {t['match_time']}\n",
             reply_markup=keyboard
         )

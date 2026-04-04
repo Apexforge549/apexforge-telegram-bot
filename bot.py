@@ -69,6 +69,9 @@ from handlers.game_profile import (
 # Importing join tournament logic from join_tournament.py
 from handlers.join_tournament import join_tournament, join_callback, cancel_join
 
+# Importing about logic from about.py
+from handlers.about import about
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -205,6 +208,9 @@ def main():
     app.add_handler(CallbackQueryHandler(join_callback, pattern="^join_")) 
     # Cancel button
     app.add_handler(MessageHandler(filters.Regex("Cancel"), cancel_join))
+
+    # Handler for about button
+    app.add_handler(MessageHandler(filters.Regex("^ℹ️ About$"), about))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

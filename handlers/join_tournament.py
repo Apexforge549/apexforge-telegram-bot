@@ -101,6 +101,20 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # ✅ Proper parsing
     today = datetime.now(IST).date()
 
+    # 🔥 ONGOING CHECK
+    if current_time >= match_time:
+
+        tournaments_collection.update_one(
+            {"tournament_id": tournament_id},
+            {"$set": {"status": "ongoing"}}
+        )
+
+        await query.message.reply_text(
+            "⏳ Tournament is already ongoing.\n\nKindly join another tournament."
+        )
+
+        return
+
     match_time_naive = datetime.strptime(match_time_str, "%I:%M %p")
 
     match_time = datetime.combine(today, match_time_naive.time()).replace(tzinfo=IST)

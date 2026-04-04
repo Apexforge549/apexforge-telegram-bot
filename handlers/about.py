@@ -30,6 +30,10 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         "📞 *Support:*\n"
         "For any issues or queries, contact admin support @Jtshm in telegram\n\n"
-        "🔥 Play Smart. Win Big. Earn More.",
+        "🔥 Play Smart. Win Big. Earn More.\n\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "🚀 **Join Our Official Telegram Channel!** 🎮\n"
+        "Stay updated with **real-time tournament updates**, announcements, and important info 📢⚡\n"
+        "Telegram channel: https://t.me/apexforge_esports_official",
         parse_mode="Markdown"
     )

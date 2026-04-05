@@ -77,6 +77,9 @@ from handlers.join_tournament import join_tournament, join_callback, cancel_join
 # Importing about logic from about.py
 from handlers.about import about
 
+# Importing tournament history from tournament_history.py
+from handlers.tournament_history import tournament_history
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -232,6 +235,9 @@ def main():
 
     # Handler for about button
     app.add_handler(MessageHandler(filters.Regex("^ℹ️ About$"), about))
+
+    # Handler for tournament history button
+    app.add_handler(MessageHandler(filters.Regex("^📜 Tournament History$"), tournament_history))
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

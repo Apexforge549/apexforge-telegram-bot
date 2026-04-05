@@ -232,6 +232,7 @@ def main():
             MessageHandler(filters.Regex("^❌ Cancel$"), cancel_result)
         ]
     )
+    app.add_handler(result_conv)
 
     #---------------ADMIN PANEL----------------
 

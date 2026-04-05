@@ -30,6 +30,10 @@ async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     username = user["username"]
     uid = user["uid"]
     joined_on = user["joined_on"]
+    if joined_on:
+        joined_on = joined_on.strftime("%d %b %Y")
+    else:
+        joined_on = "N/A"
 
     upi_id = user.get("upi_id", "Not set")
 

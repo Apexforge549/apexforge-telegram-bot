@@ -53,7 +53,7 @@ async def tournament_history(update: Update, context: ContextTypes.DEFAULT_TYPE)
             f"🎮 *Tournament ID:* `{tournament_id}`\n"
             f"💰 *Entry Fee:* ₹{entry_fee}\n"
             f"🔑 *Room Code:* `{room_code}`\n"
-            f"🔒 *Room Password:* `{room_password}`\n"
+            #f"🔒 *Room Password:* `{room_password}`\n"
             f"📅 *Date:* {date_str}\n"
             f"📊 *Result:* {result}\n"
             f"💸 *Earning:* ₹{earning}\n\n"

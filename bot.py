@@ -80,6 +80,13 @@ from handlers.about import about
 # Importing tournament history from tournament_history.py
 from handlers.tournament_history import tournament_history
 
+#---------------ADMIN PANEL----------------
+
+# Importing admin panel from admin_panel.py
+from handlers.admin.admin_panel import admin_panel
+
+#---------------ADMIN PANEL----------------
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 #Bot connection
@@ -238,6 +245,13 @@ def main():
 
     # Handler for tournament history button
     app.add_handler(MessageHandler(filters.Regex("^📜 Tournament History$"), tournament_history))
+
+    #---------------ADMIN PANEL----------------
+
+    # Handler for admin panel
+    app.add_handler(CommandHandler("admin", admin_panel))
+    
+    #---------------ADMIN PANEL----------------
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

@@ -218,10 +218,14 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # 🔥 SAVE TRANSACTION
     txn_id = str(uuid.uuid4())[:8]
+    game_username = user.get("game_username", "N/A")
+    upi_id = user.get("upi_id", "Not set")             # remove when withdraw will be activated
 
     transactions_collection.insert_one({
         "txn_id": txn_id,
         "uid": user_id,
+        "game_username": game_username,
+        "upi_id": upi_id,
         "type": "tournament_join",
         "amount": entry_fee,
         "tournament_id": tournament_id,

@@ -94,6 +94,9 @@ from handlers.admin.result_admin import (
     GET_WINNERS
 )
 
+# Importing cancel button for results
+from handlers.admin.result_admin import cancel_result
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -219,15 +222,18 @@ def main():
         ],
         states={
             GET_TOURNAMENT_ID: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_result),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, get_tournament_id)
             ],
             GET_WINNERS: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_result),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, get_winners)
             ],
         },
-        fallbacks=[]
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_result)
+        ]
     )
-    app.add_handler(result_conv)
 
     #---------------ADMIN PANEL----------------
 

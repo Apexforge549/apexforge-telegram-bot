@@ -70,8 +70,8 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
     "💰 *2. Prize Pool System*\n"
     "The prize pool will be *80% of the total entry fees collected* 🏆\n\n"
 
-    "📢 *3. Transparency Guaranteed*\n"
-    "After the match ends, the *total entry fees collected* will be shared in the Telegram channel 📊\n\n"
+    "💰 **3. Dynamic Prize Pool Alert!**\n"
+    "Once a tournament crosses **10 players**, the **prize pool keeps increasing with every new join** 📈🔥\n\n"
 
     "🥈 *4. Who Are Finalists?*\n"
     "All players who reach the *last round (except the winner)* are considered *Finalists* 👑",
@@ -182,9 +182,7 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # 🔥 CALCULATE TOTAL ENTRY & PRIZE POOL
 
-    # Fetch updated tournament (after user is added)
     updated_tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
-
     entry_fee = updated_tournament.get("entry_fee", 0)
     joined_count = len(updated_tournament.get("joined_users", []))
 
@@ -192,19 +190,22 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     total_entry = entry_fee * joined_count
 
     # Calculate prize pool (80%)
-    prize_pool = int(total_entry * 0.8)
+    calculated_prize_pool = int(total_entry * 0.8)
 
-    # Update DB
+    # 🔥 ALWAYS update total_entry
+    update_data = {
+        "total_entry": total_entry
+    }
+
+    # 🔥 ONLY update prize_pool if > 50
+    if calculated_prize_pool > 50:
+        update_data["prize_pool"] = calculated_prize_pool
+
+    # 🔥 UPDATE DB
     tournaments_collection.update_one(
         {"tournament_id": tournament_id},
-        {
-            "$set": {
-                "total_entry": total_entry,
-                "prize_pool": prize_pool
-            }
-        }
+        {"$set": update_data}
     )
-
     
     # 🔥 CHECK AND UPDATE STATUS TO FULL
     updated_tournament = tournaments_collection.find_one({"tournament_id": tournament_id})

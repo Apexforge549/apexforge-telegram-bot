@@ -13,6 +13,7 @@ UPI_INPUT = 0
 
 # ---------------- PROFILE ----------------
 async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("Profile is triggered")
 
     user_id = update.effective_user.id
 

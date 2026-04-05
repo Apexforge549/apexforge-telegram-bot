@@ -9,7 +9,7 @@ from handlers.start import start, set_username, USERNAME
 
 #importing profile logic from profile.py and update upi id logic [delete update upi id when withdraw.py activates]
 from handlers.profile import (
-    profile,  # only keep this 
+    profile, 
     update_upi_start,
     handle_upi_input,
     UPI_INPUT
@@ -181,7 +181,6 @@ def main():
     # Delete this later when withdraw.py activates
     upi_conv = ConversationHandler(
         entry_points=[
-            MessageHandler(filters.Regex("^👤 Profile$"), profile),
             CallbackQueryHandler(update_upi_start, pattern="^update_upi$")
         ],
         states={
@@ -195,7 +194,7 @@ def main():
     app.add_handler(upi_conv)
 
     #handler for profile button
-    #app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
+    app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
 
     #handler for balance button
     app.add_handler(MessageHandler(filters.Regex("^📊 Balance$"), balance))

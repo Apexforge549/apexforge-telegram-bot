@@ -29,12 +29,7 @@ async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     username = user["username"]
     uid = user["uid"]
-    joined_on = user["joined_on"].strftime("%d %b %Y")
-
-    if joined_on:
-        joined_on = joined_on.strftime("%d %b %Y")
-    else:
-        joined_on = "N/A"
+    joined_on = user["joined_on"]
 
     upi_id = user.get("upi_id", "Not set")
 
@@ -47,7 +42,8 @@ async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "👤 Your Profile 📌\n\n"
         f"👤 Username: {username}\n"
         f"🆔 UID: {uid}\n"
-        f"📅 Joined On: {joined_on}"
+        f"📅 Joined On: {joined_on}\n"
+        f"🏦 UPI ID: {upi_id}\n"
     )
 
     await update.message.reply_text(

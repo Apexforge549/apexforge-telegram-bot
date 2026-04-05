@@ -85,6 +85,15 @@ from handlers.tournament_history import tournament_history
 # Importing admin panel from admin_panel.py
 from handlers.admin.admin_panel import admin_panel
 
+# Importing result.py from handlers/admin/result.py
+from handlers.admin.result_admin import (
+    result_start,
+    get_tournament_id,
+    get_winners,
+    GET_TOURNAMENT_ID,
+    GET_WINNERS
+)
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -184,7 +193,6 @@ def main():
         MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile)
     ]
     )
-
     app.add_handler(game_profile_conv)
 
     # Conversation handler for update upi id in profile.py
@@ -200,8 +208,28 @@ def main():
         },
         fallbacks=[]
     )
-
     app.add_handler(upi_conv)
+    
+    
+    #---------------ADMIN PANEL----------------
+    
+    result_conv = ConversationHandler(
+        entry_points=[
+            MessageHandler(filters.Regex("^🏆 Results$"), result_start)
+        ],
+        states={
+            GET_TOURNAMENT_ID: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, get_tournament_id)
+            ],
+            GET_WINNERS: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, get_winners)
+            ],
+        },
+        fallbacks=[]
+    )
+    app.add_handler(result_conv)
+
+    #---------------ADMIN PANEL----------------
 
     #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))

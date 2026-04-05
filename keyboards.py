@@ -47,3 +47,14 @@ tournament_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+# Admin keyboard
+admin_keyboard = ReplyKeyboardMarkup(
+    [
+        ["📌 Create Tournament", "📋 Manage Tournaments"],
+        ["💳 Deposits", "💸 Withdrawals"],
+        ["🏆 Results", "💰 Refunds"],
+        ["🔙 Back"]
+    ],
+    resize_keyboard=True
+)

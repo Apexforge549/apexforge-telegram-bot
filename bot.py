@@ -181,7 +181,7 @@ def main():
     # Delete this later when withdraw.py activates
     upi_conv = ConversationHandler(
         entry_points=[
-            MessageHandler(filters.Regex("^👤 Profile$"), game_profile),
+            MessageHandler(filters.Regex("^👤 Profile$"), profile),
             CallbackQueryHandler(update_upi_start, pattern="^update_upi$")
         ],
         states={

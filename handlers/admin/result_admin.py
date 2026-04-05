@@ -88,7 +88,7 @@ async def get_winners(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return GET_WINNERS
 
-    # 🔥 SAVE WINNERS + COMPLETED IN DB
+    # 🔥 SAVE WINNERS + COMPLETE
     tournaments_collection.update_one(
         {"tournament_id": tournament_id},
         {
@@ -106,12 +106,12 @@ async def get_winners(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
 
     await update.message.reply_text(
-        "✅ Result processed successfully!\n\n"
-        "💰 Rewards distributed to users.",
+        "✅ Result processed successfully!\n\n💰 Rewards distributed.",
         reply_markup=admin_keyboard
     )
 
     return ConversationHandler.END
+
 
 # ---------------- CANCEL ----------------
 async def cancel_result(update: Update, context: ContextTypes.DEFAULT_TYPE):

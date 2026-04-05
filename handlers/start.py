@@ -71,7 +71,7 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
     })
 
     await update.message.reply_text(
-        f"Registration successful! Welcome {username} 🚀",
+        f"Registration successful! Welcome {username} 🚀\n\n🎁 You received ₹20 bonus!",
         reply_markup=main_keyboard
     )
 

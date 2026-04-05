@@ -63,8 +63,8 @@ async def set_username(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "username": username,
         "joined_on": datetime.utcnow(),
         "last_checkin": None,
-        "balance": 0,
-        "deposit_balance": 0,
+        "balance": 20,                      # Registration bonus
+        "deposit_balance": 20,              # Registration bonus
         "winning_balance": 0,
         "withdraw_limit": 0,
         "last_withdraw_date": datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()

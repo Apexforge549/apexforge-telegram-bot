@@ -9,7 +9,7 @@ from handlers.start import start, set_username, USERNAME
 
 #importing profile logic from profile.py and update upi id logic [delete update upi id when withdraw.py activates]
 from handlers.profile import (
-    profile, 
+    profile,    # Only keep this after withdraw is activated
     update_upi_start,
     handle_upi_input,
     UPI_INPUT

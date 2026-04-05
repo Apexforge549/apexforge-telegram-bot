@@ -91,11 +91,9 @@ from handlers.admin.result_admin import (
     get_tournament_id,
     get_winners,
     GET_TOURNAMENT_ID,
-    GET_WINNERS
+    GET_WINNERS,
+    cancel_result
 )
-
-# Importing cancel button for results
-from handlers.admin.result_admin import cancel_result
 
 #---------------ADMIN PANEL----------------
 

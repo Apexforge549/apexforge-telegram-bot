@@ -7,8 +7,13 @@ from telegram.ext import CallbackQueryHandler
 #importing start logic from start.py
 from handlers.start import start, set_username, USERNAME
 
-#importing profile logic from profile.py
-from handlers.profile import profile
+#importing profile logic from profile.py and update upi id logic [delete update upi id when withdraw.py activates]
+from handlers.profile import (
+    profile,  # only keep this 
+    update_upi_start,
+    handle_upi_input,
+    UPI_INPUT
+)
 
 #importing balance logic from balance.py
 from handlers.balance import balance
@@ -171,6 +176,24 @@ def main():
     )
 
     app.add_handler(game_profile_conv)
+
+
+    # Conversation handler for update upi id in profile.py
+    # Delete this later when withdraw.py activates
+    upi_conv = ConversationHandler(
+        entry_points=[
+            CallbackQueryHandler(update_upi_start, pattern="^update_upi$")
+        ],
+        states={
+            UPI_INPUT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_input)
+            ]
+        },
+        fallbacks=[]
+    )
+
+    app.add_handler(upi_conv)
+    
     
     #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))

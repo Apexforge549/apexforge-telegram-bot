@@ -225,19 +225,22 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "txn_id": txn_id,
         "uid": user_id,
         "game_username": game_username,
-        "upi_id": upi_id,
+        "upi_id": upi_id,                             # remove when withdraw will be activated
         "type": "tournament_join",
         "amount": entry_fee,
         "tournament_id": tournament_id,
         "deposit_used": deposit_deduct,
         "winning_used": winning_deduct,
         "status": "success",
-        "created_at": datetime.now(IST)
+        "created_at": datetime.now(IST),
+        "result": "pending",
+        "earning": 0
     })
 
     await query.message.reply_text(
         "✅ Successfully joined tournament!\n\n"
-        "📢 Room details will be sent before match.",
+        "📢 Room details will be sent before match.\n"
+        "📢 Check 📜 Tournament History for room details.",
         reply_markup=tournament_keyboard
     )
 

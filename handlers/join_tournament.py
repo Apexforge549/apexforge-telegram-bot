@@ -50,7 +50,7 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🎮 {t['game']} {t['mode']}\n"
             f"ℹ️ Tournament Id: {t['tournament_id']}\n"
             f"💰 Entry: ₹{t['entry_fee']}\n"
-            #f"💸 Prize Pool: ₹{t['prize_pool']}\n"
+            f"💸 Prize Pool: ₹{t['prize_pool']}\n"
             f"✅ Status: {t['status']}\n"
             f"👥 Slots: {len(t['joined_users'])}/{t['slots']}\n"
             f"🏆 1st Prize: ✅{t['first']}\n"
@@ -179,6 +179,33 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         }
     )
 
+
+    # 🔥 CALCULATE TOTAL ENTRY & PRIZE POOL
+
+    # Fetch updated tournament (after user is added)
+    updated_tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
+
+    entry_fee = updated_tournament.get("entry_fee", 0)
+    joined_count = len(updated_tournament.get("joined_users", []))
+
+    # Calculate total entry
+    total_entry = entry_fee * joined_count
+
+    # Calculate prize pool (80%)
+    prize_pool = int(total_entry * 0.8)
+
+    # Update DB
+    tournaments_collection.update_one(
+        {"tournament_id": tournament_id},
+        {
+            "$set": {
+                "total_entry": total_entry,
+                "prize_pool": prize_pool
+            }
+        }
+    )
+
+    
     # 🔥 CHECK AND UPDATE STATUS TO FULL
     updated_tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
 

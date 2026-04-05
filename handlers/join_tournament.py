@@ -197,7 +197,7 @@ async def join_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "total_entry": total_entry
     }
 
-    # 🔥 ONLY update prize_pool if > 50
+    # 🔥 ONLY update prize_pool if > 40
     if calculated_prize_pool > 50:
         update_data["prize_pool"] = calculated_prize_pool
 

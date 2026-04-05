@@ -177,24 +177,6 @@ def main():
 
     app.add_handler(game_profile_conv)
 
-
-    # Conversation handler for update upi id in profile.py
-    # Delete this later when withdraw.py activates
-    upi_conv = ConversationHandler(
-        entry_points=[
-            CallbackQueryHandler(update_upi_start, pattern="^update_upi$")
-        ],
-        states={
-            UPI_INPUT: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_input)
-            ]
-        },
-        fallbacks=[]
-    )
-
-    app.add_handler(upi_conv)
-    
-    
     #handler for profile button
     app.add_handler(MessageHandler(filters.Regex("^👤 Profile$"), profile))
 
@@ -234,6 +216,22 @@ def main():
 
     # Handler for about button
     app.add_handler(MessageHandler(filters.Regex("^ℹ️ About$"), about))
+
+    # Conversation handler for update upi id in profile.py
+    # Delete this later when withdraw.py activates
+    upi_conv = ConversationHandler(
+        entry_points=[
+            CallbackQueryHandler(update_upi_start, pattern="^update_upi$")
+        ],
+        states={
+            UPI_INPUT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_input)
+            ]
+        },
+        fallbacks=[]
+    )
+
+    app.add_handler(upi_conv)
 
     print("Bot is running...")
     app.run_polling(drop_pending_updates=True)

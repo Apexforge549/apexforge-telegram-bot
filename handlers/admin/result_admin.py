@@ -3,6 +3,7 @@ from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filt
 from database import db
 from utils.admin_check import is_admin
 from handlers.result_calc import process_tournament_result
+from keyboards import cancel_keyboard, admin_keyboard
 
 tournaments_collection = db["tournaments"]
 
@@ -19,7 +20,8 @@ async def result_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return ConversationHandler.END
 
     await update.message.reply_text(
-        "🏆 Enter Tournament ID to process result:"
+        "🏆 Enter Tournament ID to process result:",
+        reply_markup=cancel_keyboard
     )
 
     return GET_TOURNAMENT_ID
@@ -39,14 +41,18 @@ async def get_tournament_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # ❗ Prevent double processing
     if tournament.get("result_processed"):
-        await update.message.reply_text("⚠️ Result already processed for this tournament.")
+        await update.message.reply_text(
+            "⚠️ Result already processed for this tournament.",
+            reply_markup=admin_keyboard
+        )
         return ConversationHandler.END
 
     # Save tournament_id in session
     context.user_data["tournament_id"] = tournament_id
 
     await update.message.reply_text(
-        "👑 Enter winners (comma separated):\n\nExample:\nplayer1,player2,player3"
+        "👑 Enter winners (comma separated):\n\nExample:\nplayer1,player2,player3",
+        reply_markup=cancel_keyboard
     )
 
     return GET_WINNERS
@@ -82,7 +88,7 @@ async def get_winners(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return GET_WINNERS
 
-    # 🔥 SAVE WINNERS IN DB
+    # 🔥 SAVE WINNERS + COMPLETED IN DB
     tournaments_collection.update_one(
         {"tournament_id": tournament_id},
         {
@@ -101,7 +107,20 @@ async def get_winners(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "✅ Result processed successfully!\n\n"
-        "💰 Rewards distributed to users."
+        "💰 Rewards distributed to users.",
+        reply_markup=admin_keyboard
+    )
+
+    return ConversationHandler.END
+
+# ---------------- CANCEL ----------------
+async def cancel_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Process cancelled.\n\nReturning to Admin Panel.",
+        reply_markup=admin_keyboard
     )
 
     return ConversationHandler.END

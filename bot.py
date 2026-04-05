@@ -221,14 +221,14 @@ def main():
     app.add_handler(MessageHandler(filters.Regex("^🏆 Tournaments$"), tournaments))
 
     # Handler for game profile
-    app.add_handler(MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile))
+    #app.add_handler(MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile))
 
     # Handler for join tournament button
     app.add_handler(MessageHandler(filters.Regex("^🎮 Join Tournament$"), join_tournament))
     # Inline join button
     app.add_handler(CallbackQueryHandler(join_callback, pattern="^join_")) 
     # Cancel button
-    app.add_handler(MessageHandler(filters.Regex("Cancel"), cancel_join))
+    app.add_handler(MessageHandler(filters.Regex("^❌ Cancel$"), cancel_join))
 
     # Handler for about button
     app.add_handler(MessageHandler(filters.Regex("^ℹ️ About$"), about))

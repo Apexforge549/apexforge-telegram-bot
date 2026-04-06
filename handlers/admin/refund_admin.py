@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler, MessageHandler, filters
 from database import db
 from utils.admin_check import is_admin
+from keyboards import cancel_keyboard, admin_keyboard
 
 tournaments_collection = db["tournaments"]
 transactions_collection = db["transactions"]
@@ -15,51 +16,63 @@ GET_TOURNAMENT_ID = 0
 async def refund_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not is_admin(update.effective_user.id):
-        await update.message.reply_text("❌ You are not authorized.")
         return ConversationHandler.END
 
-    await update.message.reply_text("💰 Enter Tournament ID to process refund:")
+    await update.message.reply_text(
+        "💰 Enter Tournament ID to process refund:",
+        reply_markup=cancel_keyboard
+    )
 
     return GET_TOURNAMENT_ID
 
 
 # ---------------- HANDLE TOURNAMENT ID ----------------
-async def process_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     tournament_id = update.message.text.strip()
 
-    # 🔍 Fetch tournament
     tournament = tournaments_collection.find_one({"tournament_id": tournament_id})
 
+    # ❗ Tournament not found
     if not tournament:
-        await update.message.reply_text("❌ Tournament not found.")
-        return ConversationHandler.END
+        await update.message.reply_text("❌ Tournament not found. Try again.")
+        return GET_TOURNAMENT_ID
 
-    # ❌ Block if already refunded
+    # ❗ Already refunded
     if tournament.get("refunded"):
-        await update.message.reply_text("⚠️ This tournament is already refunded.")
-        return ConversationHandler.END
-
-    # ❌ Block if result already processed
-    if tournament.get("result_processed"):
         await update.message.reply_text(
-            "❌ Cannot refund. Result already processed."
+            "⚠️ Refund already processed for this tournament.",
+            reply_markup=admin_keyboard
         )
         return ConversationHandler.END
 
-    # 🔍 Fetch all participants
-    txns = list(
-        transactions_collection.find({
-            "type": "tournament_join",
-            "tournament_id": tournament_id
-        })
-    )
-
-    if not txns:
-        await update.message.reply_text("❌ No participants found.")
+    # ❗ Block if result already processed
+    if tournament.get("result_processed"):
+        await update.message.reply_text(
+            "❌ Cannot refund. Tournament result already processed.",
+            reply_markup=admin_keyboard
+        )
         return ConversationHandler.END
 
-    # 🔁 PROCESS EACH USER
+    # 🔥 Fetch all participants
+    txns = list(
+        transactions_collection.find(
+            {
+                "type": "tournament_join",
+                "tournament_id": tournament_id
+            }
+        )
+    )
+
+    # ❗ No participants
+    if not txns:
+        await update.message.reply_text(
+            "❌ No participants found for this tournament.",
+            reply_markup=admin_keyboard
+        )
+        return ConversationHandler.END
+
+    # 🔁 PROCESS ALL USERS FIRST
     for txn in txns:
 
         uid = txn.get("uid")
@@ -68,7 +81,7 @@ async def process_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         total_refund = deposit_used + winning_used
 
-        # 🔄 Update user balance
+        # 🔥 Refund balances
         users_collection.update_one(
             {"uid": uid},
             {
@@ -80,7 +93,7 @@ async def process_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
             }
         )
 
-        # 🔄 Update transaction
+        # 🔥 Update transaction
         transactions_collection.update_one(
             {"txn_id": txn["txn_id"]},
             {
@@ -92,20 +105,20 @@ async def process_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
             }
         )
 
-        # 📩 Notify user
+        # 🔔 Notify user
         try:
             await context.bot.send_message(
                 chat_id=uid,
                 text=(
-                    f"💰 *Refund Processed*\n\n"
-                    f"Your entry fee ₹{total_refund} for Tournament ID: {tournament_id} has been refunded."
+                    "💰 *Refund Processed*\n\n"
+                    f"Your entry fee ₹{total_refund} for Tournament ID: `{tournament_id}` has been refunded."
                 ),
                 parse_mode="Markdown"
             )
         except:
-            pass  # user may block bot
+            pass  # ignore if user blocked bot
 
-    # 🔥 AFTER LOOP → mark tournament refunded
+    # 🔥 AFTER LOOP → UPDATE TOURNAMENT
     tournaments_collection.update_one(
         {"tournament_id": tournament_id},
         {
@@ -117,7 +130,21 @@ async def process_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
     await update.message.reply_text(
-        "✅ Refund processed successfully for all users."
+        "✅ Refund processed successfully for all users.",
+        reply_markup=admin_keyboard
+    )
+
+    return ConversationHandler.END
+
+
+# ---------------- CANCEL ----------------
+async def cancel_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    context.user_data.clear()
+
+    await update.message.reply_text(
+        "❌ Refund cancelled.\n\nReturning to Admin Panel.",
+        reply_markup=admin_keyboard
     )
 
     return ConversationHandler.END

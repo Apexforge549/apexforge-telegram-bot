@@ -31,6 +31,7 @@ async def tournament_history(update: Update, context: ContextTypes.DEFAULT_TYPE)
     for txn in txns:
 
         tournament_id = txn.get("tournament_id", "N/A")
+        status = txn.get("status")
         entry_fee = txn.get("amount", 0)
         result = txn.get("result", "pending").capitalize()
         earning = txn.get("earning", 0)
@@ -53,6 +54,7 @@ async def tournament_history(update: Update, context: ContextTypes.DEFAULT_TYPE)
             f"🎮 *Tournament ID:* `{tournament_id}`\n"
             f"💰 *Entry Fee:* ₹{entry_fee}\n"
             f"🔑 *Room Code:* `{room_code}`\n"
+            f"✅ *Status:* `{status}`\n"
             #f"🔒 *Room Password:* `{room_password}`\n"
             f"📅 *Date:* {date_str}\n"
             f"📊 *Result:* {result}\n"

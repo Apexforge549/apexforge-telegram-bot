@@ -31,7 +31,6 @@ async def tournament_history(update: Update, context: ContextTypes.DEFAULT_TYPE)
     for txn in txns:
 
         tournament_id = txn.get("tournament_id", "N/A")
-        status = txn.get("status")
         entry_fee = txn.get("amount", 0)
         result = txn.get("result", "pending").capitalize()
         earning = txn.get("earning", 0)
@@ -46,7 +45,8 @@ async def tournament_history(update: Update, context: ContextTypes.DEFAULT_TYPE)
         tournament = tournaments_collection.find_one(
             {"tournament_id": tournament_id}
         )
-
+        
+        status = tournament.get("status")
         room_code = tournament.get("room_code", "Not available") if tournament else "N/A"
         room_password = tournament.get("room_password", "Not available") if tournament else "N/A"
 

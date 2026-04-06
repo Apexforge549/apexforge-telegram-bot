@@ -95,6 +95,9 @@ from handlers.admin.result_admin import (
     cancel_result
 )
 
+# Importing deposit_admin.py 
+from handlers.admin.deposit_admin import show_deposits, handle_deposit_actions
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -283,6 +286,12 @@ def main():
 
     # Handler for admin panel
     app.add_handler(CommandHandler("admin", admin_panel))
+
+    # Handler for deposit_admin.py
+    # Button click → show deposits
+    app.add_handler(MessageHandler(filters.Regex("^💳 Deposits$"), show_deposits))
+    # Inline button handler
+    app.add_handler(CallbackQueryHandler(handle_deposit_actions, pattern="^dep_"))
     
     #---------------ADMIN PANEL----------------
 

@@ -13,6 +13,7 @@ IST = ZoneInfo("Asia/Kolkata")
 
 # ---------------- SHOW PENDING DEPOSITS ----------------
 async def show_deposits(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("Show deposits called")
 
     if not is_admin(update.effective_user.id):
         return

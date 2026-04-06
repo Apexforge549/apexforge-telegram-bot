@@ -98,6 +98,14 @@ from handlers.admin.result_admin import (
 # Importing deposit_admin.py 
 from handlers.admin.deposit_admin import show_deposits, handle_deposit_actions
 
+# Importing refund_admin.py
+from handlers.admin.refund_admin import (
+    refund_start,
+    handle_refund,
+    cancel_refund,
+    GET_TOURNAMENT_ID
+)
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -216,7 +224,8 @@ def main():
     
     
     #---------------ADMIN PANEL----------------
-    
+
+    # conversation handler for results button
     result_conv = ConversationHandler(
         entry_points=[
             MessageHandler(filters.Regex("^🏆 Results$"), result_start)
@@ -236,6 +245,23 @@ def main():
         ]
     )
     app.add_handler(result_conv)
+
+    # conversation handler for refunds button
+    refund_conv = ConversationHandler(
+        entry_points=[
+            MessageHandler(filters.Regex("^💰 Refunds$"), refund_start)
+        ],
+        states={
+            GET_TOURNAMENT_ID: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_refund)
+            ],
+        },
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund)
+        ]
+    )
+    app.add_handler(refund_conv)
 
     #---------------ADMIN PANEL----------------
 

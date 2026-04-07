@@ -58,3 +58,14 @@ admin_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+# Manage tournaments keyboard
+manage_tournaments_keyboard = ReplyKeyboardMarkup(
+    [
+        ["📄 View Tournaments"],
+        ["✏️ Edit Tournament"],
+        ["❌ Delete Tournament"],
+        ["🔙 Back"]
+    ],
+    resize_keyboard=True
+)

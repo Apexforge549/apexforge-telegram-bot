@@ -106,6 +106,9 @@ from handlers.admin.refund_admin import (
     GET_TOURNAMENT_ID
 )
 
+# Importing manage_tournaments reply keyboard
+from handlers.admin.manage_tournaments import manage_tournaments
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -318,6 +321,9 @@ def main():
     app.add_handler(MessageHandler(filters.Regex("^💳 Deposits$"), show_deposits))
     # Inline button handler
     app.add_handler(CallbackQueryHandler(handle_deposit_actions, pattern="^dep_"))
+
+    # Handler for reply keyboard of manage tournaments
+    from handlers.admin.manage_tournaments import manage_tournaments
     
     #---------------ADMIN PANEL----------------
 

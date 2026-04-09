@@ -272,6 +272,21 @@ def main():
     )
     app.add_handler(refund_conv)
 
+    # Conversation handler for view tournaments
+    room_conv = ConversationHandler(
+        entry_points=[
+            CallbackQueryHandler(set_room_code_start, pattern="roomcode_"),
+            CallbackQueryHandler(set_room_pass_start, pattern="roompass_"),
+        ],
+        states={
+            ROOM_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_code)],
+            ROOM_PASS: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_pass)],
+        },
+        fallbacks=[]
+    )
+
+    app.add_handler(room_conv)
+
     #---------------ADMIN PANEL----------------
 
     #handler for profile button

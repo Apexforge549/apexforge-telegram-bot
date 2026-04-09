@@ -5,7 +5,6 @@ from keyboards import manage_tournaments_keyboard
 
 
 async def manage_tournaments(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("function is working")
 
     if not is_admin(update.effective_user.id):
         return

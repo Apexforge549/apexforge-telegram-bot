@@ -323,7 +323,7 @@ def main():
     app.add_handler(CallbackQueryHandler(handle_deposit_actions, pattern="^dep_"))
 
     # Handler for reply keyboard of manage tournaments
-    from handlers.admin.manage_tournaments import manage_tournaments
+    app.add_handler(MessageHandler(filters.Regex("^📋 Manage Tournaments$"), manage_tournaments))
     
     #---------------ADMIN PANEL----------------
 

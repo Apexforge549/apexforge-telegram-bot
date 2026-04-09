@@ -16,6 +16,6 @@ async def admin_go_back(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     await update.message.reply_text(
-        "🔙 Back to main menu",
+        "🔙 Back to admin menu",
         reply_markup=admin_keyboard
     )

@@ -44,13 +44,13 @@ async def view_tournaments(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"📊 Status: {t.get('status')}\n"
             f"⏰ Time: {t.get('match_time')}\n"
             f"🔑 Room Code: {t.get('room_code')}\n"
-            f"🔒 Password: {t.get('room_password')}"
+            f"🔒 Room Password: {t.get('room_password')}"
         )
 
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("🔑 Room Code", callback_data=f"roomcode_{tid}"),
-                InlineKeyboardButton("🔒 Password", callback_data=f"roompass_{tid}")
+                InlineKeyboardButton("🔒 Room Password", callback_data=f"roompass_{tid}")
             ],
             [
                 InlineKeyboardButton("👥 Players", callback_data=f"players_{tid}"),
@@ -156,7 +156,7 @@ async def refresh_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"👥 Slots: {len(t.get('joined_users', []))}/{t.get('slots')}\n"
         f"📊 Status: {t.get('status')}\n"
         f"🔑 Room Code: {t.get('room_code')}\n"
-        f"🔒 Password: {t.get('room_password')}"
+        f"🔒 Room Password: {t.get('room_password')}"
     )
 
     await query.message.reply_text(message, parse_mode="Markdown")

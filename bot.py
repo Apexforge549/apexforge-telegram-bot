@@ -113,17 +113,7 @@ from handlers.admin.manage_tournaments import manage_tournaments
 from handlers.back import admin_go_back
 
 # Importing view tournaments from view_tournaments.py
-from handlers.admin.view_tournaments import (
-    view_tournaments,
-    set_room_code_start,
-    save_room_code,
-    set_room_pass_start,
-    save_room_pass,
-    show_players,
-    refresh_tournament,
-    ROOM_CODE,
-    ROOM_PASS
-)
+from handlers.admin.view_tournaments import *
 
 #---------------ADMIN PANEL----------------
 

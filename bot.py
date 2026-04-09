@@ -109,6 +109,9 @@ from handlers.admin.refund_admin import (
 # Importing manage_tournaments reply keyboard
 from handlers.admin.manage_tournaments import manage_tournaments
 
+#importing back to menu logic from back.py
+from handlers.back import admin_go_back
+
 #---------------ADMIN PANEL----------------
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -324,6 +327,9 @@ def main():
 
     # Handler for reply keyboard of manage tournaments
     app.add_handler(MessageHandler(filters.Regex("^📋 Manage Tournaments$"), manage_tournaments))
+
+    #handler for back to menu button
+    app.add_handler(MessageHandler(filters.Regex("^🔙 Back to admin menu$"), admin_go_back))
     
     #---------------ADMIN PANEL----------------
 

@@ -366,9 +366,14 @@ def main():
     
     # View tournaments button
     app.add_handler(MessageHandler(filters.Regex("^📄 View Tournaments$"), view_tournaments))
-    # ✅ Inline buttons
-    app.add_handler(CallbackQueryHandler(show_players, pattern="^players_"))
-    app.add_handler(CallbackQueryHandler(refresh_tournament, pattern="^refresh_"))
+    # Room code
+    app.add_handler(CallbackQueryHandler(set_room_code_start, pattern="roomcode_"))
+    # Room password
+    app.add_handler(CallbackQueryHandler(set_room_pass_start, pattern="roompass_"))
+    # Players
+    app.add_handler(CallbackQueryHandler(show_players, pattern="players_"))
+    # Refresh
+    app.add_handler(CallbackQueryHandler(refresh_tournament, pattern="refresh_"))
     
     
     #---------------ADMIN PANEL----------------

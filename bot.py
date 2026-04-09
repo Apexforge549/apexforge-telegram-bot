@@ -113,7 +113,17 @@ from handlers.admin.manage_tournaments import manage_tournaments
 from handlers.back import admin_go_back
 
 # Importing view tournaments from view_tournaments.py
-from handlers.admin.view_tournaments import *
+from handlers.admin.view_tournaments import (
+    view_tournaments,
+    set_room_code_start,
+    save_room_code,
+    set_room_pass_start,
+    save_room_pass,
+    show_players,
+    refresh_tournament,
+    ROOM_CODE,
+    ROOM_PASS
+)
 
 #---------------ADMIN PANEL----------------
 
@@ -275,17 +285,21 @@ def main():
     # Conversation handler for view tournaments
     room_conv = ConversationHandler(
         entry_points=[
-            CallbackQueryHandler(set_room_code_start, pattern="roomcode_"),
-            CallbackQueryHandler(set_room_pass_start, pattern="roompass_"),
+            CallbackQueryHandler(set_room_code_start, pattern="^roomcode_"),
+            CallbackQueryHandler(set_room_pass_start, pattern="^roompass_"),
         ],
         states={
-            ROOM_CODE: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_code)],
-            ROOM_PASS: [MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_pass)],
+            ROOM_CODE: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_code)
+            ],
+            ROOM_PASS: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_pass)
+            ],
         },
         fallbacks=[]
     )
 
-    app.add_handler(room_conv)
+app.add_handler(room_conv)
 
     #---------------ADMIN PANEL----------------
 
@@ -352,16 +366,9 @@ def main():
     
     # View tournaments button
     app.add_handler(MessageHandler(filters.Regex("^📄 View Tournaments$"), view_tournaments))
-    # Pagination
-    app.add_handler(CallbackQueryHandler(handle_pagination, pattern="page"))
-    # Room code
-    app.add_handler(CallbackQueryHandler(set_room_code_start, pattern="roomcode_"))
-    # Room password
-    app.add_handler(CallbackQueryHandler(set_room_pass_start, pattern="roompass_"))
-    # Players
-    app.add_handler(CallbackQueryHandler(show_players, pattern="players_"))
-    # Refresh
-    app.add_handler(CallbackQueryHandler(refresh_tournament, pattern="refresh_"))
+    # ✅ Inline buttons
+    app.add_handler(CallbackQueryHandler(show_players, pattern="^players_"))
+    app.add_handler(CallbackQueryHandler(refresh_tournament, pattern="^refresh_"))
     
     
     #---------------ADMIN PANEL----------------

@@ -21,23 +21,10 @@ async def view_tournaments(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_admin(update.effective_user.id):
         return
 
-    context.user_data["page"] = 0
-    await send_tournaments(update, context)
-
-
-# ---------------- SEND TOURNAMENT LIST ----------------
-async def send_tournaments(update, context):
-
-    page = context.user_data.get("page", 0)
-    limit = 2
-    skip = page * limit
-
     tournaments = list(
         tournaments_collection.find(
             {"status": {"$in": ["open", "closed", "full", "ongoing"]}}
         )
-        .skip(skip)
-        .limit(limit)
     )
 
     if not tournaments:
@@ -52,18 +39,18 @@ async def send_tournaments(update, context):
             f"🆔 ID: {tid}\n"
             f"🎮 Game: {t.get('game')}\n"
             f"💰 Entry: ₹{t.get('entry_fee')}\n"
-            f"🏆 Prize Pool: ₹{t.get('prize_pool')}\n"
+            f"🏆 Prize: ₹{t.get('prize_pool')}\n"
             f"👥 Slots: {len(t.get('joined_users', []))}/{t.get('slots')}\n"
             f"📊 Status: {t.get('status')}\n"
             f"⏰ Time: {t.get('match_time')}\n"
             f"🔑 Room Code: {t.get('room_code')}\n"
-            f"🔒 Room Password: {t.get('room_password')}"
+            f"🔒 Password: {t.get('room_password')}"
         )
 
         keyboard = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton("🔑 Room Code", callback_data=f"roomcode_{tid}"),
-                InlineKeyboardButton("🔒 Room Password", callback_data=f"roompass_{tid}")
+                InlineKeyboardButton("🔒 Password", callback_data=f"roompass_{tid}")
             ],
             [
                 InlineKeyboardButton("👥 Players", callback_data=f"players_{tid}"),
@@ -72,31 +59,6 @@ async def send_tournaments(update, context):
         ])
 
         await update.message.reply_text(message, reply_markup=keyboard)
-
-    # 🔹 Pagination buttons
-    nav = InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("⬅️ Prev", callback_data="prev_page"),
-            InlineKeyboardButton("➡️ Next", callback_data="next_page")
-        ]
-    ])
-
-    await update.message.reply_text("📄 Navigation:", reply_markup=nav)
-
-
-# ---------------- PAGINATION ----------------
-async def handle_pagination(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "next_page":
-        context.user_data["page"] += 1
-    elif query.data == "prev_page":
-        context.user_data["page"] = max(0, context.user_data["page"] - 1)
-
-    await query.message.delete()
-    await send_tournaments(query, context)
 
 
 # ---------------- ROOM CODE ----------------
@@ -194,7 +156,7 @@ async def refresh_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"👥 Slots: {len(t.get('joined_users', []))}/{t.get('slots')}\n"
         f"📊 Status: {t.get('status')}\n"
         f"🔑 Room Code: {t.get('room_code')}\n"
-        f"🔒 Room Password: {t.get('room_password')}"
+        f"🔒 Password: {t.get('room_password')}"
     )
 
     await query.message.reply_text(message, parse_mode="Markdown")

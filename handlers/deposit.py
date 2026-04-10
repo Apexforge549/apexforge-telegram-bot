@@ -102,7 +102,7 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
-        reply_markup=cancel_deposit_keyboard
+        reply_markup=deposit_keyboard
     )
 
     return UPI_ID

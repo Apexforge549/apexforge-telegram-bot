@@ -72,7 +72,6 @@ async def join_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Once a tournament crosses **10 players**, the **prize pool keeps increasing with every new join** 📈🔥\n\n"
         "🥈 *4. Who Are Finalists?*\n"
         "All players who reach the *last round (except the winner)* are considered *Finalists* 👑",
-        parse_mode="Markdown",
         reply_markup=cancel_join_keyboard
     )
 

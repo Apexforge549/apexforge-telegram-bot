@@ -155,24 +155,24 @@ def main():
     ],
     states={
         AMOUNT: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
         ],
         WAIT_DONE: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
             CallbackQueryHandler(done_callback, pattern="^deposit_done$")
         ],
         UPI_NAME: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
         ],
         UPI_ID: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
         ],
     },
     fallbacks=[
-        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_deposit),
+        MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
     ]
     )
 

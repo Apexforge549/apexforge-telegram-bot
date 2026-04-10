@@ -37,6 +37,11 @@ cancel_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel"]],
     resize_keyboard=True
 )
+# ❌ Cancel deposit keyboard
+cancel_deposit = ReplyKeyboardMarkup(
+    [["❌ Cancel Deposit"]],
+    resize_keyboard=True
+)
 
 # 🏆 Tournaments keyboard
 tournament_keyboard = ReplyKeyboardMarkup(

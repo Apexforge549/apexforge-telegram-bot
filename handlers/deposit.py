@@ -30,7 +30,7 @@ async def deposit_enter_amount(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text(
         "💳 *Deposit*\n\n💰 Please type the amount you want to deposit:",
         parse_mode="Markdown",
-        reply_markup=cancel_deposit
+        reply_markup=cancel_deposit_keyboard
     )
     return AMOUNT
 
@@ -81,7 +81,7 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.reply_text(
         "📝 Enter your *UPI Name* (Account Holder Name):",
         parse_mode="Markdown",
-        reply_markup=cancel_deposit
+        reply_markup=cancel_deposit_keyboard
     )
 
     return UPI_NAME
@@ -95,7 +95,7 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
         parse_mode="Markdown",
-        reply_markup=cancel_deposit
+        reply_markup=cancel_deposit_keyboard
     )
 
     return UPI_ID

@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
-from keyboards import cancel_keyboard, withdraw_keyboard, main_keyboard
+from keyboards import cancel_withdraw_keyboard, withdraw_keyboard, main_keyboard
 import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -35,7 +35,7 @@ async def withdraw_enter_amount(update: Update, context: ContextTypes.DEFAULT_TY
     await update.message.reply_text(
         "💸 *Withdraw*\n\n💸 Enter the amount you want to withdraw:",
         parse_mode="Markdown",
-        reply_markup=cancel_keyboard
+        reply_markup=cancel_withdraw_keyboard
     )
 
     return W_AMOUNT
@@ -105,7 +105,7 @@ async def handle_withdraw_amount(update: Update, context: ContextTypes.DEFAULT_T
 
     await update.message.reply_text(
         "📝 Enter your UPI Name:",
-        reply_markup=cancel_keyboard
+        reply_markup=cancel_withdraw_keyboard
     )
 
     return W_UPI_NAME
@@ -118,7 +118,7 @@ async def handle_w_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "🏦 Enter your UPI ID (example: name@upi):",
-        reply_markup=cancel_keyboard
+        reply_markup=cancel_withdraw_keyboard
     )
 
     return W_UPI_ID

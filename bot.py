@@ -52,7 +52,6 @@ from handlers.withdraw import withdraw_history
 
 # Importing the withdraw logic
 from handlers.withdraw import (
-    withdraw,
     withdraw_enter_amount,
     handle_withdraw_amount,
     handle_w_upi_name,
@@ -193,20 +192,20 @@ def main():
         ],
         states={
             W_AMOUNT: [
-                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.Regex("^❌ Cancel Withdraw$"), cancel_withdraw),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_withdraw_amount)
             ],
             W_UPI_NAME: [
-                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.Regex("^❌ Cancel Withdraw$"), cancel_withdraw),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_name)
             ],
             W_UPI_ID: [
-                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.Regex("^❌ Cancel Withdraw$"), cancel_withdraw),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_id)
             ],
         },
         fallbacks=[
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw)
+            MessageHandler(filters.Regex("^❌ Cancel Withdraw$"), cancel_withdraw)
         ]
     )
 
@@ -310,7 +309,7 @@ def main():
     # Conversation handler for view tournaments
     view_tournaments_conv = ConversationHandler(
         entry_points=[
-            MessageHandler(filters.Regex("^📄 View Tournaments"))
+            MessageHandler(filters.Regex("^📄 View Tournaments$"), view_tournaments)
         ],
         states={
             VIEW_TOURNAMENTS:[
@@ -320,10 +319,10 @@ def main():
                 CallbackQueryHandler(refresh_tournament, pattern="^refresh_"),
             ],
             ROOM_CODE: [
-                MessageHandler(filters.TEXT & -filters.COMMAND, save_room_code)
+                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_code)
             ],
             ROOM_PASS: [
-                MessageHandler(filters.TEXT & -filters.COMMAND, save_room_pass)
+                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_pass)
             ],
         },
         fallbacks=[]

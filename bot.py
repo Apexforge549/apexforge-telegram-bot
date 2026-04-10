@@ -44,14 +44,12 @@ from handlers.deposit import (
     UPI_ID
 )
 
-# Importing the withdraw menu from withdraw.py
-from handlers.withdraw import withdraw
-
 # Importing the withdraw history
 from handlers.withdraw import withdraw_history
 
 # Importing the withdraw logic
 from handlers.withdraw import (
+    withdraw,
     withdraw_enter_amount,
     handle_withdraw_amount,
     handle_w_upi_name,

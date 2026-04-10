@@ -178,9 +178,9 @@ def main():
     fallbacks=[
         MessageHandler(filters.Regex(r"Cancel Deposit"), cancel_deposit)
     ],
-)
+    )
 
-app.add_handler(deposit_conv)
+    app.add_handler(deposit_conv)
 
     # Conversation Handler for withdraw amount button in withdraw button
     withdraw_conv = ConversationHandler(

@@ -67,11 +67,6 @@ async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TY
         reply_markup=keyboard
     )
 
-    await update.message.reply_text(
-        "👇 Use the ❌ Cancel Deposit button below to cancel.",
-        reply_markup=cancel_deposit_keyboard
-    )
-
     return WAIT_DONE
 
 
@@ -81,13 +76,8 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
 
-    # remove inline button after click
-    await query.message.edit_reply_markup(reply_markup=None)
-
     await query.message.reply_text(
-        "📝 Enter your *UPI Name* (Account Holder Name):",
-        parse_mode="Markdown",
-        reply_markup=cancel_deposit_keyboard
+        "📝 Enter your *UPI Name* (Account Holder Name):"
     )
 
     return UPI_NAME
@@ -106,7 +96,6 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
-        parse_mode="Markdown",
         reply_markup=cancel_deposit_keyboard
     )
 
@@ -151,7 +140,6 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "⏳ Kindly wait patiently.\n"
         "Your request will be verified within 1 hour.\n\n"
         "🙏 Thank you for your patience!",
-        parse_mode="Markdown",
         reply_markup=deposit_keyboard
     )
 
@@ -162,8 +150,20 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data.clear()
+    if update.message:
+        await update.message.reply_text(
+            "❌ Deposit cancelled.",
+            reply_markup=deposit_keyboard
+        )
 
-    await update.message.reply_text(
+    elif update.callback_query:
+        query = update.callback_query
+        await query.answer()
+        await query.edit_message_text(
+            "❌ Deposit cancelled.",
+        )
+
+    await query.message.reply_text(
         "❌ Deposit cancelled.\n\nReturning to Deposit Menu.",
         reply_markup=deposit_keyboard
     )

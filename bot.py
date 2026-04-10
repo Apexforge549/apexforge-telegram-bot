@@ -183,7 +183,8 @@ def main():
         fallbacks=[
             MessageHandler(filters.Regex(r"Cancel Deposit$"), cancel_deposit),
             CallbackQueryHandler(cancel_deposit, pattern="^cancel_deposit$")
-        ]
+        ],
+        block=False
     ) 
     app.add_handler(deposit_conv)
 

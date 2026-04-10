@@ -25,13 +25,14 @@ from handlers.check import checkin
 from handlers.back import go_back
 
 #importing deposit menu from deposit.py
-from handlers.deposit import deposit
+#from handlers.deposit import deposit
 
 #importing deposit history logic from deposit.py
 from handlers.deposit import deposit_history
 
 #importing the main deposit logic from deposit.py
 from handlers.deposit import (
+    deposit,
     deposit_enter_amount,
     handle_deposit_amount,
     done_callback,

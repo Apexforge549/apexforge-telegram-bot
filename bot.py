@@ -75,7 +75,12 @@ from handlers.game_profile import (
 )
 
 # Importing join tournament logic from join_tournament.py
-from handlers.join_tournament import join_tournament, join_callback, cancel_join
+from handlers.join_tournament import (
+    join_tournament,
+    join_callback,
+    cancel_join,
+    JOIN_STATE
+)
 
 # Importing about logic from about.py
 from handlers.about import about
@@ -153,79 +158,95 @@ def main():
 
     # Conversation handler for Enter amount button in deposit button
     deposit_conv = ConversationHandler(
-    entry_points=[
-        MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
-    ],
-    states={
-        AMOUNT: [
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
+        entry_points=[
+            MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
         ],
-        WAIT_DONE: [
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-            CallbackQueryHandler(done_callback, pattern="^deposit_done$")
-        ],
-        UPI_NAME: [
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
-        ],
-        UPI_ID: [
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
-        ],
-    },
-    fallbacks=[
-        MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit)
-    ]
-    )
-
+        states={
+            AMOUNT: [
+                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
+            ],
+            WAIT_DONE: [
+                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+                CallbackQueryHandler(done_callback, pattern="^deposit_done$")
+            ],
+            UPI_NAME: [
+                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
+            ],
+            UPI_ID: [
+                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
+            ],
+        },
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit)
+        ]
+    ) 
     app.add_handler(deposit_conv)
 
     # Conversation Handler for withdraw amount button in withdraw button
     withdraw_conv = ConversationHandler(
-    entry_points=[
-        MessageHandler(filters.Regex("^💸 Withdraw Amount$"), withdraw_enter_amount)
-    ],
-    states={
-        W_AMOUNT: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_withdraw_amount)
+        entry_points=[
+            MessageHandler(filters.Regex("^💸 Withdraw Amount$"), withdraw_enter_amount)
         ],
-        W_UPI_NAME: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_name)
-        ],
-        W_UPI_ID: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_id)
-        ],
-    },
-    fallbacks=[
-        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw)
-    ]
+        states={
+            W_AMOUNT: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_withdraw_amount)
+            ],
+            W_UPI_NAME: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_name)
+            ],
+            W_UPI_ID: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_w_upi_id)
+            ],
+        },
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_withdraw)
+        ]
     )
 
     app.add_handler(withdraw_conv)
 
+    # Conversation handler for join tournament button
+    join_conv = ConversationHandler(
+        entry_points=[
+            MessageHandler(filters.Regex("^🎮 Join Tournament$"), join_tournament)
+        ],
+        states={
+            JOIN_STATE: [
+                MessageHandler(filters.Regex("^❌ Cancel Joining$"), cancel_join),
+                CallbackQueryHandler(join_callback, pattern="^join_")
+            ]
+        },
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel Joining$"), cancel_join)
+        ]
+    )
+    app.add_handler(join_conv)
+
     # Conversation handler for game profile button
     game_profile_conv = ConversationHandler(
-    entry_points=[
-        MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile),
-        CallbackQueryHandler(change_profile_start, pattern="^change_profile$")
-    ],
-    states={
-        G_UID: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_uid)
+        entry_points=[
+            MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile),
+            CallbackQueryHandler(change_profile_start, pattern="^change_profile$")
         ],
-        G_USERNAME: [
-            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_username)
-        ],
-    },
-    fallbacks=[
-        MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile)
-    ]
+        states={
+            G_UID: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_uid)
+            ],
+            G_USERNAME: [
+                MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_game_username)
+            ],
+        },
+        fallbacks=[
+            MessageHandler(filters.Regex("^❌ Cancel$"), cancel_game_profile)
+        ]
     )
     app.add_handler(game_profile_conv)
 
@@ -335,13 +356,6 @@ def main():
 
     # Handler for game profile
     #app.add_handler(MessageHandler(filters.Regex("^📊 Game Profile$"), game_profile))
-
-    # Handler for join tournament button
-    app.add_handler(MessageHandler(filters.Regex("^🎮 Join Tournament$"), join_tournament))
-    # Inline join button
-    app.add_handler(CallbackQueryHandler(join_callback, pattern="^join_")) 
-    # Cancel button
-    app.add_handler(MessageHandler(filters.Regex("^❌ Cancel$"), cancel_join))
 
     # Handler for about button
     app.add_handler(MessageHandler(filters.Regex("^ℹ️ About$"), about))

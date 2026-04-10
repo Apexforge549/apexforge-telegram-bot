@@ -12,7 +12,7 @@ from utils.admin_check import is_admin
 tournaments_collection = db["tournaments"]
 
 # 🔹 STATES
-ROOM_CODE, ROOM_PASS = range(2)
+VIEW_TOURNAMENTS, ROOM_CODE, ROOM_PASS = range(3)
 
 
 # ---------------- VIEW TOURNAMENTS ----------------
@@ -29,7 +29,7 @@ async def view_tournaments(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not tournaments:
         await update.message.reply_text("❌ No tournaments found.")
-        return
+        return ConversationHandler.end
 
     for t in tournaments:
 
@@ -87,7 +87,7 @@ async def save_room_code(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text("✅ Room code updated.")
 
-    return ConversationHandler.END
+    return VIEW_TOURNAMENTS
 
 
 # ---------------- ROOM PASSWORD ----------------
@@ -116,7 +116,7 @@ async def save_room_pass(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text("✅ Room password updated.")
 
-    return ConversationHandler.END
+    return VIEW_TOURNAMENTS
 
 
 # ---------------- PLAYERS ----------------
@@ -137,6 +137,8 @@ async def show_players(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = ", ".join(players)
 
     await query.message.reply_text(f"👥 Players for {tid}:\n{msg}")
+
+    return VIEW_TOURNAMENTS
 
 
 # ---------------- REFRESH ----------------
@@ -160,3 +162,4 @@ async def refresh_tournament(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
 
     await query.message.reply_text(message, parse_mode="Markdown")
+    return VIEW_TOURNAMENTS

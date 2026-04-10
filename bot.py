@@ -157,33 +157,30 @@ def main():
 
     # Conversation handler for Enter amount button in deposit button
     deposit_conv = ConversationHandler(
-        entry_points=[
-            MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
+    entry_points=[
+        MessageHandler(filters.Regex("^💰 Deposit Amount$"), deposit_enter_amount)
+    ],
+    states={
+        AMOUNT: [
+            MessageHandler(filters.Regex(r"Cancel Deposit"), cancel_deposit),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
         ],
-        states={
-            AMOUNT: [
-                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
-            ],
-            WAIT_DONE: [
-                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-                CallbackQueryHandler(done_callback, pattern="^deposit_done$")
-                
-            ],
-            UPI_NAME: [
-                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
-            ],
-            UPI_ID: [
-                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
-                MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
-            ],
-        },
-        fallbacks=[
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+        WAIT_DONE: [
+            CallbackQueryHandler(done_callback, pattern="^deposit_done$")
         ],
-    ) 
-    app.add_handler(deposit_conv)
+        UPI_NAME: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_name)
+        ],
+        UPI_ID: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_upi_id)
+        ],
+    },
+    fallbacks=[
+        MessageHandler(filters.Regex(r"Cancel Deposit"), cancel_deposit)
+    ],
+)
+
+app.add_handler(deposit_conv)
 
     # Conversation Handler for withdraw amount button in withdraw button
     withdraw_conv = ConversationHandler(

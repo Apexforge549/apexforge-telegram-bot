@@ -54,6 +54,12 @@ async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TY
         [InlineKeyboardButton("✅ Done", callback_data="deposit_done")]
     ])
 
+    # Remove cancel button and show deposit menu
+    await update.message.reply_text(
+        "💳 Continue your deposit:",
+        reply_markup=deposit_keyboard
+    )
+
     await update.message.reply_photo(
         photo=QR_FILE_ID,
         caption=(
@@ -77,7 +83,7 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     await query.message.reply_text(
-        "📝 Enter your *UPI Name* (Account Holder Name):"
+        "✅ Payment marked as done.\n\n📝 Enter your UPI Name:"
     )
 
     return UPI_NAME
@@ -150,24 +156,11 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data.clear()
-    if update.message:
-        await update.message.reply_text(
-            "❌ Deposit cancelled.",
-            reply_markup=deposit_keyboard
-        )
-
-    elif update.callback_query:
-        query = update.callback_query
-        await query.answer()
-        await query.edit_message_text(
-            "❌ Deposit cancelled.",
-        )
-
-    await query.message.reply_text(
-        "❌ Deposit cancelled.\n\nReturning to Deposit Menu.",
+    await update.message.reply_text(
+        "❌ Deposit cancelled.",
         reply_markup=deposit_keyboard
     )
-
+        
     return ConversationHandler.END
 
 

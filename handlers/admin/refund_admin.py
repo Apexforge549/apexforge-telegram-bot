@@ -9,7 +9,7 @@ transactions_collection = db["transactions"]
 users_collection = db["users"]
 
 # 🔹 STATE
-GET_TOURNAMENT_ID = 0
+GET_REFUND_TOURNAMENT_ID = 0
 
 
 # ---------------- ENTRY ----------------
@@ -23,7 +23,7 @@ async def refund_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=cancel_keyboard
     )
 
-    return GET_TOURNAMENT_ID
+    return GET_REFUND_TOURNAMENT_ID
 
 
 # ---------------- HANDLE TOURNAMENT ID ----------------
@@ -36,7 +36,7 @@ async def handle_refund(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # ❗ Tournament not found
     if not tournament:
         await update.message.reply_text("❌ Tournament not found. Try again.")
-        return GET_TOURNAMENT_ID
+        return GET_REFUND_TOURNAMENT_ID
 
     # ❗ Already refunded
     if tournament.get("refunded"):

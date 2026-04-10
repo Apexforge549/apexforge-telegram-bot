@@ -111,7 +111,7 @@ from handlers.admin.refund_admin import (
     refund_start,
     handle_refund,
     cancel_refund,
-    GET_TOURNAMENT_ID
+    GET_REFUND_TOURNAMENT_ID
 )
 
 # Importing manage_tournaments reply keyboard

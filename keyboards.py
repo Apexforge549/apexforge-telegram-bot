@@ -42,6 +42,11 @@ cancel_deposit_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel Deposit"]],
     resize_keyboard=True
 )
+#❌ Cancel withdraw keyboard
+cancel_withdraw_keyboard = ReplyKeyboardMarkup(
+    [["❌ Cancel Withdraw"]],
+    resize_keyboard=True
+)
 #❌ Cancel Join keyboard
 cancel_join_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel Joining"]],

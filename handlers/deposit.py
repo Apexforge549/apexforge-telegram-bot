@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
-from keyboards import cancel_keyboard, deposit_keyboard
+from keyboards import cancel_deposit_keyboard, deposit_keyboard
 import uuid
 from datetime import datetime
 from zoneinfo import ZoneInfo

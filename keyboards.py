@@ -38,7 +38,7 @@ cancel_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 # ❌ Cancel deposit keyboard
-cancel_deposit = ReplyKeyboardMarkup(
+cancel_deposit_keyboard = ReplyKeyboardMarkup(
     [["❌ Cancel Deposit"]],
     resize_keyboard=True
 )

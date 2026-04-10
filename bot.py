@@ -166,8 +166,10 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_deposit_amount)
             ],
             WAIT_DONE: [
-                MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+                MessageHandler(filters.Regex(r"Cancel Deposit"), cancel_deposit),
+                CallbackQueryHandler(cancel_deposit, pattern="^cancel_deposit$"),
                 CallbackQueryHandler(done_callback, pattern="^deposit_done$")
+                
             ],
             UPI_NAME: [
                 MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
@@ -179,7 +181,8 @@ def main():
             ],
         },
         fallbacks=[
-            MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit)
+            MessageHandler(filters.Regex(r"Cancel Deposit$"), cancel_deposit),
+            CallbackQueryHandler(cancel_deposit, pattern="^cancel_deposit$")
         ]
     ) 
     app.add_handler(deposit_conv)

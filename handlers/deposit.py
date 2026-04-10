@@ -36,10 +36,6 @@ async def deposit_enter_amount(update: Update, context: ContextTypes.DEFAULT_TYP
 # ---------------- AMOUNT ----------------
 async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    # Stop if conversation already cancelled
-    if "amount" not in context.user_data:
-        return ConversationHandler.END
-
     text = update.message.text.strip()
 
     if not text.isdigit():
@@ -154,7 +150,6 @@ async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cancel_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     context.user_data.clear()
-    context.user_data["cancelled"]=True
     if update.message:
         await update.message.reply_text(
             "❌ Deposit cancelled.",

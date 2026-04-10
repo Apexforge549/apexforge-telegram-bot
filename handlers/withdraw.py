@@ -9,17 +9,17 @@ from database import users_collection, db
 # Shows the Withdraw menu
 async def withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    #await update.message.reply_text(
-        #"📤 *Withdraw Menu*\n\nSelect an option below:",
-        #parse_mode="Markdown",
-        #reply_markup=withdraw_keyboard
-    #)
+    await update.message.reply_text(
+        "📤 *Withdraw Menu*\n\nSelect an option below:",
+        parse_mode="Markdown",
+        reply_markup=withdraw_keyboard
+    )
 
     # Temporary withdraw button closed
-    await update.message.reply_text(
-        "Withdraw Menu will be active soon✅",
-        reply_markup=main_keyboard
-    )
+    #await update.message.reply_text(
+        #"Withdraw Menu will be active soon✅",
+        #reply_markup=main_keyboard
+    #)
 
 
 transactions_collection = db["transactions"]

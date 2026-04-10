@@ -129,6 +129,7 @@ from handlers.admin.view_tournaments import (
     save_room_pass,
     show_players,
     refresh_tournament,
+    VIEW_TOURNAMENTS,
     ROOM_CODE,
     ROOM_PASS
 )
@@ -295,7 +296,7 @@ def main():
             MessageHandler(filters.Regex("^💰 Refunds$"), refund_start)
         ],
         states={
-            GET_TOURNAMENT_ID: [
+            GET_REFUND_TOURNAMENT_ID: [
                 MessageHandler(filters.Regex("^❌ Cancel$"), cancel_refund),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_refund)
             ],
@@ -307,23 +308,28 @@ def main():
     app.add_handler(refund_conv)
 
     # Conversation handler for view tournaments
-    room_conv = ConversationHandler(
+    view_tournaments_conv = ConversationHandler(
         entry_points=[
-            CallbackQueryHandler(set_room_code_start, pattern="^roomcode_"),
-            CallbackQueryHandler(set_room_pass_start, pattern="^roompass_"),
+            MessageHandler(filters.Regex("^📄 View Tournaments"))
         ],
         states={
+            VIEW_TOURNAMENTS:[
+                CallbackQueryHandler(set_room_code_start, pattern="^roomcode_"),
+                CallbackQueryHandler(set_room_pass_start, pattern="^roompass_"),
+                CallbackQueryHandler(show_players, pattern="^players_"),
+                CallbackQueryHandler(refresh_tournament, pattern="^refresh_"),
+            ],
             ROOM_CODE: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_code)
+                MessageHandler(filters.TEXT & -filters.COMMAND, save_room_code)
             ],
             ROOM_PASS: [
-                MessageHandler(filters.TEXT & ~filters.COMMAND, save_room_pass)
+                MessageHandler(filters.TEXT & -filters.COMMAND, save_room_pass)
             ],
         },
         fallbacks=[]
     )
-
-    app.add_handler(room_conv)
+    app.add_handler(view_tournaments_conv)
+               
 
     #---------------ADMIN PANEL----------------
 
@@ -379,14 +385,6 @@ def main():
     
     #handler for back to menu button
     app.add_handler(MessageHandler(filters.Regex("^🔙 Back to admin menu$"), admin_go_back))
-
-    
-    # View tournaments button
-    app.add_handler(MessageHandler(filters.Regex("^📄 View Tournaments$"), view_tournaments))
-    # Players
-    app.add_handler(CallbackQueryHandler(show_players, pattern="players_"))
-    # Refresh
-    app.add_handler(CallbackQueryHandler(refresh_tournament, pattern="refresh_"))
     
     
     #---------------ADMIN PANEL----------------

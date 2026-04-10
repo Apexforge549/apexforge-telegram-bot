@@ -38,7 +38,10 @@ from handlers.deposit import (
     handle_upi_name,
     handle_upi_id,
     cancel_deposit,
-    AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID
+    AMOUNT,
+    WAIT_DONE,
+    UPI_NAME,
+    UPI_ID
 )
 
 # Importing the withdraw menu from withdraw.py
@@ -172,7 +175,7 @@ def main():
         ],
     },
     fallbacks=[
-        MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit),
+        MessageHandler(filters.Regex("^❌ Cancel Deposit$"), cancel_deposit)
     ]
     )
 

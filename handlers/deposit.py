@@ -6,16 +6,6 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from database import users_collection, db
 
-
-async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
-    await update.message.reply_text(
-        "💳 Deposit Menu\n\nSelect an option below:",
-        reply_markup=deposit_keyboard
-    )
-
-
-# Main deposit logic
 transactions_collection = db["transactions"]
 IST = ZoneInfo("Asia/Kolkata")
 
@@ -23,6 +13,14 @@ IST = ZoneInfo("Asia/Kolkata")
 AMOUNT, WAIT_DONE, UPI_NAME, UPI_ID = range(4)
 
 QR_FILE_ID = "AgACAgUAAxkBAAPoac00dDegXy5ZQbMHPn-nJ78_-SQAAnYPaxtFXmlWRuPI0cZyV2IBAAMCAAN4AAM6BA"
+
+
+# ---------------- MENU ----------------
+async def deposit(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "💳 Deposit Menu\n\nSelect an option below:",
+        reply_markup=deposit_keyboard
+    )
 
 
 # ---------------- ENTRY ----------------
@@ -69,14 +67,22 @@ async def handle_deposit_amount(update: Update, context: ContextTypes.DEFAULT_TY
         reply_markup=keyboard
     )
 
+    await update.message.reply_text(
+        "👇 Use the ❌ Cancel Deposit button below to cancel.",
+        reply_markup=cancel_deposit_keyboard
+    )
+
     return WAIT_DONE
 
 
-# ---------------- DONE BUTTON ----------------
+# ---------------- DONE ----------------
 async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     query = update.callback_query
     await query.answer()
+
+    # remove inline button after click
+    await query.message.edit_reply_markup(reply_markup=None)
 
     await query.message.reply_text(
         "📝 Enter your *UPI Name* (Account Holder Name):",
@@ -90,7 +96,13 @@ async def done_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ---------------- UPI NAME ----------------
 async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    context.user_data["upi_name"] = update.message.text.strip()
+    name = update.message.text.strip()
+
+    if len(name) < 3:
+        await update.message.reply_text("❌ Enter a valid name.")
+        return UPI_NAME
+
+    context.user_data["upi_name"] = name
 
     await update.message.reply_text(
         "🏦 Now enter your *UPI ID*\n\nExample: name@upi",
@@ -101,24 +113,29 @@ async def handle_upi_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return UPI_ID
 
 
-# ---------------- UPI ID + SAVE ----------------
+# ---------------- UPI ID ----------------
 async def handle_upi_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     upi_id = update.message.text.strip()
+
+    if "@" not in upi_id:
+        await update.message.reply_text("❌ Enter a valid UPI ID.")
+        return UPI_ID
 
     context.user_data["upi_id"] = upi_id
 
     user_id = update.effective_user.id
     user = users_collection.find_one({"uid": user_id})
 
+    username = user.get("username", "Unknown") if user else "Unknown"
+
     txn_id = str(uuid.uuid4())[:8]
     now_ist = datetime.now(IST)
 
-    # SAVE TO DB
     transactions_collection.insert_one({
         "txn_id": txn_id,
         "uid": user_id,
-        "username": user["username"],
+        "username": username,
         "type": "deposit",
         "amount": context.user_data["amount"],
         "upi_name": context.user_data["upi_name"],

@@ -15,7 +15,7 @@ async def withdraw(update: Update, context: ContextTypes.DEFAULT_TYPE):
         #reply_markup=withdraw_keyboard
     #)
 
-    Temporary withdraw button closed
+    #Temporary withdraw button closed
     await update.message.reply_text(
         "Withdraw Menu will be active soon✅",
         reply_markup=main_keyboard
